@@ -53,6 +53,7 @@ var Shareabouts = Shareabouts || {};
         }
         return stationDistanceCache[a.id] - stationDistanceCache[b.id];
       })[0];
+      const closestStationName = closestStation ? closestStation.properties.Name : null;
       const closestStationDistance = closestStation ? stationDistanceCache[closestStation.id] : null;
       const closestStationReadableDistance = closestStation ? S.Util.humanizeDistance(closestStationDistance) : null;
 
@@ -63,6 +64,7 @@ var Shareabouts = Shareabouts || {};
         youSuggested: yourSuggestions.length > 0,
         othersSuggestionCount: othersSuggestions.length,
         closestStation,
+        closestStationName,
         closestStationDistance,
         closestStationReadableDistance,
       });

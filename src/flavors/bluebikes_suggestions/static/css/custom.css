@@ -2,12 +2,18 @@
 
 :root {
   --light-gray: #e6e7e7;
+
+  --content-background-color: white;
+  --button-background-color: black;
+  --subtle-button-background-color:var(--light-gray);
 }
 
 body {
   font-family: "DM Sans", sans-serif;
   font-optical-sizing: auto;
 }
+
+/*= Content Panel */
 
 a.close-btn {
   display: flex;
@@ -21,9 +27,36 @@ a.close-btn {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 1.25rem;
-  background-color: var(--light-gray);
+  background-color: var(--subtle-button-background-color);
 }
 
 a.close-btn span {
   display: none;
+}
+
+@media (width >= 960px) {
+  a.close-btn {
+    left: -3rem;
+    background-color: var(--content-background-color);
+  }
+
+  #content {
+    left: auto;
+    width: 24rem;
+    box-sizing: border-box;
+  }
+
+  .content-visible #map-container {
+    right: 24rem;
+    left: 0;
+    margin-left: 0;
+    width: auto;
+  }
+}
+
+/*= Location Summary */
+
+.closest-station-info .station-name,
+.closest-station-info .station-distance {
+  font-weight: bold;
 }
