@@ -146,6 +146,33 @@ var Shareabouts = Shareabouts || {};
       }
     },
 
+    humanizeDistance: function(meters) {
+      const feet = meters * 3.28084,
+            yards = feet / 3,
+            miles = yards / 1760;
+
+      // Round to 1ft up to 50ft
+      if (feet <= 50) {
+        return Math.round(feet) + ' ft';
+      }
+      // Round to 10ft up to 250ft
+      else if (feet <= 250) {
+        return Math.round(feet / 10) * 10 + ' ft';
+      }
+      // Round to 10yd up to 300yd
+      else if (yards <= 300) {
+        return Math.round(yards / 10) * 10 + ' yd';
+      }
+      // Round to 0.25mi up to 5mi
+      else if (miles <= 5) {
+        return (Math.round(miles * 4) / 4).toFixed(2) + ' mi';
+      }
+      // Round to 1mi
+      else {
+        return Math.round(miles) + ' mi';
+      }
+    },
+
     // ====================================================
     // Event and State Logging
 

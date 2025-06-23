@@ -1,0 +1,243 @@
+{% load jstemplate %}
+{% load i18n %}
+{% load shareabouts_utils %}
+{% load static %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ config.app.title }}</title>
+  <meta name="description" content="{{ config.app.meta_description }}">
+  <meta name="author" content="{{ config.app.meta_author }}">
+
+  <!-- Social Media meta tags and such -->
+  {% block meta %}{% endblock %}
+
+  <!-- Mobile Viewport Fix -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui" />
+
+  {% block app_icons %}
+  <!-- Favicon & Progressively-Enhanced Touch Icons: http://mathiasbynens.be/notes/touch-icons#sizes -->
+  <link rel="shortcut icon" href="{{ config.static_url }}css/images/favicon.ico">
+  {% endblock app_icons %}
+
+  {% if settings.DEBUG %}
+  <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'css/default.css' %}">
+  {% else %}
+  <link rel="stylesheet" href="{% static 'dist/app.css' %}?_={{settings.LAST_DEPLOY_DATE}}">
+  {% endif %}
+
+  <!-- Flavor's Custom Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}?_={{settings.LAST_DEPLOY_DATE}}">
+</head>
+
+<body class="{% if config.map.geocoding_enabled %} geocoding-enabled{% endif %}">
+  {% block sentry_init %}
+    {% if settings.RAVEN_CONFIG.public_dsn %}{% include '_sentry_init.html' %}{% endif %}
+  {% endblock %}
+
+  <header id="site-header" class="clearfix{% if pages_config %} has-pages{% endif %}">
+    <h1 id="site-title">{% block site-title %}{% endblock %}</h1>
+
+    {% block pre_pages_nav %}{% endblock %}
+    <div id="pages-nav-container"></div>
+    {% block post_pages_nav %}{% endblock %}
+
+    {% if config.languages %}
+      {% include 'language_picker.html' %}
+    {% endif %}
+  </header>
+
+  <div role="main" id="main">
+    <noscript>
+      <div class="noscript">
+      <h3>
+        {% blocktrans %}
+        Oops, {{ config.app.name}} needs JavaScript to work properly.
+        {% endblocktrans %}
+      </h3>
+      <p>
+        {% blocktrans %}
+        {{ config.app.name }} is great but it needs something called JavaScript to work
+        properly. But fear not, it's really easy to turn on. Click
+        <a href="http://enable-javascript.com/" target="_blank">here</a> for simple instructions!
+        {% endblocktrans %}
+      </p>
+      </div>
+    </noscript>
+
+    {% if config.map.geocoding_enabled %}
+    <div id="geocode-address-bar" class="clearfix"></div>
+    {% endif %}
+
+    <div id="map-container">
+      <div id="ajax-error-msg">{% blocktrans %}We can't connect to the server at the moment. Hang tight while we re-establish communication.{% endblocktrans %}</div>
+      <div id="map-progress" class="progress-bar"><strong>Loading Data&hellip;</strong><span class="current-progress"></span></div>
+      <div id="map"></div>
+    </div>
+
+    <div id="content"><!-- .place or .page -->
+      <a href="#" class="close-btn">&#10005;<span>{% blocktrans %}Close{% endblocktrans %}</span></a>
+      <article></article>
+    </div><!-- end #content -->
+  </div><!-- end #main -->
+
+  <div id="ticker">
+    {% block sidebar %}{% endblock %}
+    <ul class="recent-points unstyled-list"></ul>
+  </div>
+
+  <div id="list-container"></div>
+
+  <footer id="colophon">
+    {% block colophon %}{% endblock %}
+  </footer>
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}libs/jquery-1.10.2.js"><\/script>')</script><!-- FIXME: Maybe this should be pulled into the repo as a git submodule-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/perliedman-leaflet-control-geocoder/1.13.0/Control.Geocoder.js"></script>
+
+  {% if uses_mapbox_layers %}
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel='stylesheet' />
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+  <script src="https://unpkg.com/mapbox-gl-leaflet@0.0.16/leaflet-mapbox-gl.js"></script>
+  {% endif %}
+
+  {% block cdn_load %}{% endblock %}
+
+  {% if settings.DEBUG %}
+  <script src="{% static 'libs/underscore.js' %}"></script>
+  <script src="{% static 'libs/backbone.js' %}"></script>
+  <script src="{% static 'libs/backbone.marionette.js' %}"></script>
+  <script src="{% static 'libs/handlebars-v3.0.3.js' %}"></script>
+  <script src="{% static 'libs/moment-with-locales.min.js' %}"></script>
+  <script src="{% static 'libs/json2.js' %}"></script>
+  <script src="{% static 'libs/leaflet.argo.js' %}"></script>
+  <script src="{% static 'libs/binaryajax.js' %}"></script>
+  <script src="{% static 'libs/exif.js' %}"></script>
+  <script src="{% static 'libs/load-image.js' %}"></script>
+  <script src="{% static 'libs/canvas-to-blob.js' %}"></script>
+  <script src="{% static 'libs/spin.min.js' %}"></script>
+  <script src="{% static 'libs/gatekeeper.js' %}"></script>
+  <script src="{% static 'libs/swag.min.js' %}"></script>
+  <script src="{% static 'libs/jquery.scrollTo.js' %}"></script>
+
+  <script src="{% static 'js/utils.js' %}"></script>
+  <script src="{% static 'js/template-helpers.js' %}"></script>
+  <!-- https://github.com/openplans/handlebars-helpers -->
+  <script src="{% static 'libs/handlebars-helpers.js' %}"></script>
+  {% else %}
+  <script src="{% static 'dist/libs.min.js' %}?_={{settings.LAST_DEPLOY_DATE}}"></script>
+  <script src="{% static 'dist/preload.js' %}?_={{settings.LAST_DEPLOY_DATE}}"></script>
+  {% endif %}
+
+  <!-- Register Handlebars helpers from Swag -->
+  <script>Swag.registerHelpers(Handlebars);</script>
+
+  <script>
+    moment.locale('{{LANGUAGE_CODE}}');
+  </script>
+
+  <!-- Bootstrap site and user information -->
+  <script>
+    Shareabouts.bootstrapped = {
+      dataset: {{ DATASET_ROOT|as_json }},
+      staticUrl: '{{ STATIC_URL }}',
+      languageCode: '{{ LANGUAGE_CODE }}',
+      mapQuestKey: '{{ settings.MAPQUEST_KEY }}',
+      mapboxToken: '{{ settings.MAPBOX_TOKEN }}'
+    };
+
+    function bootstrapCurrentUser(data) {
+      Shareabouts.bootstrapped.currentUser = data;
+    }
+
+    bootstrapCurrentUser({{ api_user|as_json }});
+  </script>
+
+  {% if settings.DEBUG %}
+  <script src="{% static 'js/handlebars-helpers.js' %}"></script>
+  <script src="{% static 'js/models.js' %}"></script>
+  <script src="{% static 'js/views/pages-nav-view.js' %}"></script>
+  <script src="{% static 'js/views/auth-nav-view.js' %}"></script>
+  <script src="{% static 'js/views/activity-view.js' %}"></script>
+  <script src="{% static 'js/views/app-view.js' %}"></script>
+  <script src="{% static 'js/views/layer-view.js' %}"></script>
+  <script src="{% static 'js/views/map-view.js' %}"></script>
+  <script src="{% static 'js/views/support-view.js' %}"></script>
+  <script src="{% static 'js/views/survey-view.js' %}"></script>
+  <script src="{% static 'js/views/place-detail-view.js' %}"></script>
+  <script src="{% static 'js/views/place-form-view.js' %}"></script>
+  <script src="{% static 'js/views/place-list-view.js' %}"></script>
+  <script src="{% static 'js/routes.js' %}"></script>
+  {% else %}
+  <script src="{% static 'dist/app.js' %}?_={{settings.LAST_DEPLOY_DATE}}"></script>
+  {% endif %}
+
+  {% comment %} <script src="{{API_ROOT}}users/current?format=jsonp&callback=bootstrapCurrentUser"></script> {% endcomment %}
+
+  {% handlebarsjs '(.*)' precompile register_partials %}
+  {% handlebarsjs 'pages/*' precompile %}
+
+  <script type="text/javascript">
+  (function(S, $){
+    // Boostrapping the place types and their icons
+    S.Config = {
+      defaultPlaceTypeName: '{{ default_place_type }}',
+      userToken: (
+        S.bootstrapped.currentUser ?
+        'user:' + S.bootstrapped.currentUser.id :
+        {{ user_token_json|safe }}),
+
+      flavor:     {{ config.data|as_json }},
+      place:      {{ config.place|as_json }},
+      placeTypes: {{ config.place_types|as_json }},
+      survey:     {{ config.survey|as_json }},
+      support:    {{ config.support|as_json }},
+      map:        {{ config.map|as_json }},
+      activity:   {{ config.activity|as_json }},
+      pages:      {{ pages_config_json|safe }}
+    };
+
+    $(function() {
+      // Ready set go!
+      window.app = new Shareabouts.App({
+        activity: [],
+
+        defaultPlaceTypeName: S.Config.defaultPlaceTypeName,
+        userToken: S.Config.userToken,
+
+        config: S.Config.flavor,
+        placeConfig: S.Config.place,
+        placeTypes: S.Config.placeTypes,
+        surveyConfig: S.Config.survey,
+        supportConfig: S.Config.support,
+        mapConfig: S.Config.map,
+        activityConfig: S.Config.activity,
+        pagesConfig: S.Config.pages
+      });
+    });
+  })(Shareabouts, jQuery);
+  </script>
+
+  {% if settings.GOOGLE_ANALYTICS_ID %}
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.GOOGLE_ANALYTICS_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{{ settings.GOOGLE_ANALYTICS_ID }}');
+  </script>
+  {% endif %}
+
+  {% block includes %}{% endblock %}
+
+</body>
+</html>

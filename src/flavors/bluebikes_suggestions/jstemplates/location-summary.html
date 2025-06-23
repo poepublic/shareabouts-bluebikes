@@ -1,0 +1,46 @@
+<p class="nearby-suggestions-info">
+{{#if youSuggested}}
+
+  {{#is othersSuggestionCount 0}}
+    <!-- You and 0 other suggestions -->
+    {{#_}}You have suggested more bikeshare within about a block of here.{{/_}}
+  {{/is}}
+
+  {{#is othersSuggestionCount 1}}
+    <!-- You and 1 other suggestion -->
+    {{#_}}You and one other person have suggested more bikeshare within about a block of here.{{/_}}
+  {{/is}}
+
+  {{#gt othersSuggestionCount 1}}
+    <!-- You and more than 1 suggestion -->
+    {{#_}}You and {{othersSuggestionCount}} other people have suggested more bikeshare within about a block of here.{{/_}}
+  {{/gt}}
+
+{{else}}
+
+  {{#is othersSuggestionCount 0}}
+    <!-- 0 suggestions -->
+    {{#_}}No one has suggested more bikeshare within about a block of here yet.{{/_}}
+  {{/is}}
+
+  {{#is othersSuggestionCount 1}}
+    <!-- 1 suggestion, not you -->
+    {{#_}}One other person has suggested more bikeshare within about a block of here.{{/_}}
+  {{/is}}
+
+  {{#gt othersSuggestionCount 1}}
+    <!-- More than 1 suggestion, not you -->
+    {{#_}}{{othersSuggestionCount}} other people have suggested more bikeshare within about a block of here.{{/_}}
+  {{/gt}}
+
+{{/if}}
+</p>
+
+{{#if closestStation}}
+<p class="closest-station-info">
+
+  {{#_}}The closest bikeshare station is <span class="station-name">{{closestStationName}}</span> about <span class="station-distance">{{closestStationReadableDistance}} away</span>.{{/_}}
+
+</p>
+{{/if}}
+

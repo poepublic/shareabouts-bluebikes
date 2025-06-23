@@ -27,6 +27,10 @@ var Shareabouts = Shareabouts || {};
     return a === b ? options.fn(this) : options.inverse(this);
   });
 
+  Handlebars.registerHelper('gt', function(a, b, options) {
+    return a > b ? options.fn(this) : options.inverse(this);
+  });
+
   // Current user -------------------------------------------------------------
 
   Handlebars.registerHelper('is_authenticated', function(options) {

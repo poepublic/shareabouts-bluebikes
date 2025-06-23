@@ -159,7 +159,6 @@ var Shareabouts = Shareabouts || {};
         self.setPlaceFormViewLocation(address);
       });
 
-
       // List view is enabled by default (undefined) or by enabling it
       // explicitly. Set it to a falsey value to disable activity.
       if (_.isUndefined(self.options.config.app.list_enabled) ||
@@ -174,7 +173,7 @@ var Shareabouts = Shareabouts || {};
       this.$panel = $('#content');
       this.$panelContent = $('#content article');
       this.$panelCloseBtn = $('.close-btn');
-      this.$centerpoint = $('#centerpoint');
+      // this.$centerpoint = $('#centerpoint'); // This should be in the map view
       this.$addButton = $('#add-place-btn-container');
 
       // Bind to map move events so we can style our center points
@@ -195,7 +194,7 @@ var Shareabouts = Shareabouts || {};
 
       // Show tools for adding data
       this.setBodyClass();
-      this.showCenterPoint();
+      // this.showCenterPoint();
 
       // Load places from the API
       this.loadPlaces(placeParams);
@@ -276,39 +275,47 @@ var Shareabouts = Shareabouts || {};
         this.placeFormView.setLocation(location);
       }
     },
+
+    // These should be in the map view
     onMapMoveStart: function(evt) {
-      this.$centerpoint.addClass('dragging');
+      // this.$centerpoint.addClass('dragging');
     },
     onMapMoveEnd: function(evt) {
-      var ll = this.mapView.map.getCenter(),
-          zoom = this.mapView.map.getZoom();
+      if (this.mapView) {
+        var ll = this.mapView.getCenter(),
+            zoom = this.mapView.getZoom();
 
-      this.$centerpoint.removeClass('dragging');
+        // this.$centerpoint.removeClass('dragging');
 
-      if (this.hasBodyClass('content-visible') === false) {
-        this.setLocationRoute(zoom, ll.lat, ll.lng);
+        if (this.hasBodyClass('content-visible') === false) {
+          this.setLocationRoute(zoom, ll.lat, ll.lng);
+        }
+
+        this.currentMapCenter = ll;
       }
-
-      this.currentMapCenter = ll;
     },
     onMapZoomEnd: function(evt) {
-      var ll = this.mapView.map.getCenter(),
-          zoom = this.mapView.map.getZoom();
+      if (this.mapView) {
+        var ll = this.mapView.getCenter(),
+            zoom = this.mapView.getZoom();
 
-      // Never set the placeFormView's latLng until the user does it with a
-      // drag event (below)
-      if (this.placeFormView && this.placeFormView.center) {
-        if (!this.currentMapCenter ||
-            Math.abs(this.currentMapCenter.lat - ll.lat) > 0.0001 ||
-            Math.abs(this.currentMapCenter.lng - ll.lng) > 0.0001) {
-          this.setPlaceFormViewLatLng(ll);
-          this.conditionallyReverseGeocode();
+        // Never set the placeFormView's latLng until the user does it with a
+        // drag event (below)
+        if (this.placeFormView && this.placeFormView.center) {
+          if (!this.currentMapCenter ||
+              Math.abs(this.currentMapCenter.lat - ll.lat) > 0.0001 ||
+              Math.abs(this.currentMapCenter.lng - ll.lng) > 0.0001) {
+            this.setPlaceFormViewLatLng(ll);
+            this.conditionallyReverseGeocode();
+          }
         }
       }
     },
     onMapDragEnd: function(evt) {
-      this.setPlaceFormViewLatLng(this.mapView.map.getCenter());
-      this.conditionallyReverseGeocode();
+      if (this.mapView) {
+        this.setPlaceFormViewLatLng(this.mapView.getCenter());
+        this.conditionallyReverseGeocode();
+      }
     },
     onClickAddPlaceBtn: function(evt) {
       evt.preventDefault();
@@ -407,23 +414,21 @@ var Shareabouts = Shareabouts || {};
         parseFloat(lat).toFixed(5) + '/' + parseFloat(lng).toFixed(5));
     },
 
-    viewMap: function(zoom, lat, lng) {
-      var self = this,
-          ll;
-
-      // If the map locatin is part of the url already
+    setMapView: function(zoom, lat, lng) {
+      // If the map location is part of the url already
       if (zoom && lat && lng) {
-        ll = L.latLng(parseFloat(lat), parseFloat(lng));
-
         // Why defer? Good question. There is a mysterious race condition in
         // some cases where the view fails to set and the user is left in map
         // limbo. This condition is seemingly eliminated by defering the
         // execution of this step.
-        _.defer(function() {
-          self.mapView.map.setView(ll, parseInt(zoom, 10));
+        _.defer(() => {
+          this.mapView.setView(parseFloat(lng), parseFloat(lat), parseInt(zoom, 10));
         });
       }
+    },
 
+    viewMap: function(zoom, lat, lng) {
+      this.setMapView(zoom, lat, lng);
       this.hidePanel();
       this.hideNewPin();
       this.destroyNewModels();
@@ -435,6 +440,30 @@ var Shareabouts = Shareabouts || {};
     },
     viewNewPlace: function(model, responseId, zoom) {
       return this.viewPlace(model, responseId, zoom, true)
+    },
+    viewLocationSummary: function(zoom, lat, lng, isNew) {
+      const proximityRadius = this.options.config.map.proximity_radius; // Default to 50 meters
+      const locationSummaryView = new S.LocationSummaryView({
+        collection: this.collection,
+        el: this.$panelContent,
+        config: this.options.config,
+        radius: proximityRadius,
+        zoom, lat,lng, isNew
+      });
+
+      this.setMapView(zoom, lat, lng);
+      this.mapView.showProximityLayer(lng, lat);
+      this.showPanel();
+      locationSummaryView.render();
+      this.hideNewPin();
+      this.destroyNewModels();
+      // this.hideCenterPoint();
+      this.setBodyClass('content-visible');
+
+      // Trigger a summarize event so that the collection can update its
+      // summary data.
+      this.collection.each((model) => model.trigger('unfocus'));
+      this.collection.trigger('summarize');
     },
     viewPlace: function(model, responseId, zoom, isNew) {
       var self = this,
@@ -464,7 +493,7 @@ var Shareabouts = Shareabouts || {};
         self.showPanel(placeDetailView.render(isNew).$el, !!responseId);
         self.hideNewPin();
         self.destroyNewModels();
-        self.hideCenterPoint();
+        // self.hideCenterPoint();
         self.setBodyClass('content-visible');
 
         if (layer) {
@@ -541,12 +570,10 @@ var Shareabouts = Shareabouts || {};
 
       this.hideNewPin();
       this.destroyNewModels();
-      this.hideCenterPoint();
+      // this.hideCenterPoint();
       this.setBodyClass('content-visible');
     },
     showPanel: function(markup, preventScrollToTop) {
-      var map = this.mapView.map;
-
       this.unfocusAllPlaces();
 
       this.$panelContent.html(markup);
@@ -566,32 +593,35 @@ var Shareabouts = Shareabouts || {};
       }
 
       this.setBodyClass('content-visible');
-      map.invalidateSize({ animate:true, pan:true });
+      this.mapView.updateSize();
 
       $(S).trigger('panelshow', [this.options.router, Backbone.history.getFragment()]);
       S.Util.log('APP', 'panel-state', 'open');
     },
-    showNewPin: function() {
-      this.$centerpoint.removeClass('is-hidden').addClass('newpin');
-    },
-    showCenterPoint: function() {
-      this.$centerpoint.removeClass('is-hidden').removeClass('newpin');
-    },
-    hideCenterPoint: function() {
-      this.$centerpoint.addClass('is-hidden');
-    },
+
+    // // These should be in the map view
+    // showNewPin: function() {
+    //   this.$centerpoint.removeClass('is-hidden').addClass('newpin');
+    // },
+    // showCenterPoint: function() {
+    //   this.$centerpoint.removeClass('is-hidden').removeClass('newpin');
+    // },
+    // hideCenterPoint: function() {
+    //   this.$centerpoint.addClass('is-hidden');
+    // },
+
     hidePanel: function() {
       var map = this.mapView.map;
 
       this.unfocusAllPlaces();
       this.$panel.hide();
       this.setBodyClass();
-      map.invalidateSize({ animate:true, pan:true });
+      this.mapView.updateSize();
 
       S.Util.log('APP', 'panel-state', 'closed');
     },
     hideNewPin: function() {
-      this.showCenterPoint();
+      // this.showCenterPoint();
     },
     unfocusAllPlaces: function() {
       // Unfocus all of the markers

@@ -14,7 +14,8 @@ var Shareabouts = Shareabouts || {};
       'list': 'showList',
       'page/:slug': 'viewPage',
       'filter/:locationtype': 'filterMap',
-      ':zoom/:lat/:lng': 'viewMap'
+      ':zoom/:lat/:lng': 'viewMap',
+      ':zoom/:lat/:lng/summary': 'viewLocationSummary',
     },
 
     initialize: function(options) {
@@ -33,7 +34,7 @@ var Shareabouts = Shareabouts || {};
             locationTypes = _.map(S.Config.placeTypes, function(config, key){ return key; });
 
         if (!_.contains(locationTypes, locationType)) {
-          console.warn(locationType + ' is not supported.');
+          // console.warn(locationType + ' is not supported.');
           return locationType + ' is not supported.';
         }
       };
@@ -126,6 +127,10 @@ var Shareabouts = Shareabouts || {};
 
     viewNewPlace: function(id, responseId) {
       this.appView.viewNewPlace(id, responseId, this.loading);
+    },
+
+    viewLocationSummary: function(zoom, lat, lng) {
+      this.appView.viewLocationSummary(parseFloat(zoom), parseFloat(lat), parseFloat(lng));
     },
 
     editPlace: function(){},
