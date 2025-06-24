@@ -3,6 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     dirs: {
       // Configurable paths
+      bluebikes_src: 'src/flabors/bluebikes_suggestions/static',
       src: 'src/sa_web/static',
       dest: 'src/sa_web/static/dist'
     },
@@ -20,7 +21,7 @@ module.exports = function(grunt) {
                                           '<%= dirs.src %>/js/views/activity-view.js',
                                           '<%= dirs.src %>/js/views/app-view.js',
                                           '<%= dirs.src %>/js/views/layer-view.js',
-                                          '<%= dirs.src %>/js/views/map-view.js',
+                                          '<%= dirs.bluebikes_src %>/js/views/map-view.js',
                                           '<%= dirs.src %>/js/views/support-view.js',
                                           '<%= dirs.src %>/js/views/survey-view.js',
                                           '<%= dirs.src %>/js/views/place-detail-view.js',
