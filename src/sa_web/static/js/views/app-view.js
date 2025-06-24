@@ -422,7 +422,7 @@ var Shareabouts = Shareabouts || {};
         // limbo. This condition is seemingly eliminated by defering the
         // execution of this step.
         _.defer(() => {
-          this.mapView.setView(parseFloat(lng), parseFloat(lat), parseInt(zoom, 10));
+          this.mapView.setView(parseFloat(lng), parseFloat(lat), parseFloat(zoom, 10));
         });
       }
     },
