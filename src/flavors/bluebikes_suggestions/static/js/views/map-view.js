@@ -139,9 +139,10 @@ var Shareabouts = Shareabouts || {};
       const data = {
         type: 'FeatureCollection',
         features: models.map(model => {
-          const center = turf.point(model.get('geometry').coordinates);
           const properties = model.toJSON();
-          return turf.circle(center, radius, { units: 'meters', properties });
+          const center = turf.point(model.get('geometry').coordinates, properties);
+          const circle = turf.circle(center, radius, { units: 'meters', properties });
+          return circle;
         }),
       };
       suggestionsSource.setData(data);
@@ -162,8 +163,7 @@ var Shareabouts = Shareabouts || {};
           'layout': {},
           'paint': {
             'circle-radius': 3,
-            'circle-color': '#0889cb',
-            'circle-opacity': 1,
+            'circle-color': "rgba(8, 137, 203, 1)",
           },
         });
       }
@@ -177,15 +177,30 @@ var Shareabouts = Shareabouts || {};
       }
 
       if (!this.map.getLayer('station-suggestions-layer')) {
+        // this.map.addLayer({
+        //   'id': 'station-suggestions-layer',
+        //   'type': 'heatmap',
+        //   'source': 'station-suggestions',
+        //   'layout': {},
+        //   'paint': {
+        //     'heatmap-color': [
+        //       "interpolate", 
+        //       ["linear"], 
+        //       ["heatmap-density"],
+        //       0, "rgba(241, 93, 34, 0)",
+        //       1, "rgba(241, 93, 34, 1)"
+        //     ],
+        //     'heatmap-radius': 10,
+        //   },
+        // }, 'proximity-layer');
         this.map.addLayer({
           'id': 'station-suggestions-layer',
           'type': 'fill',
           'source': 'station-suggestions',
           'layout': {},
           'paint': {
-            'fill-color': '#f15d22',
+            'fill-color': "rgb(241, 93, 34)",
             'fill-opacity': 0.1,
-            'fill-blur': 1,
           },
         }, 'proximity-layer');
       }

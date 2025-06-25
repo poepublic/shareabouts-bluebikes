@@ -24,7 +24,7 @@ var Shareabouts = Shareabouts || {};
 
       const suggestions = this.collection.models.filter(suggestion => {
         const suggestionPoint = turf.point(suggestion.get('geometry').coordinates);
-        return turf.distance(point, suggestionPoint, {units: 'meters'}) <= radius;
+        return turf.distance(point, suggestionPoint, {units: 'meters'}) <= radius * 2;
         // return turf.booleanPointInPolygon(suggestionPoint, buffered);
       });
       const yourSuggestions = suggestions.filter(suggestion => suggestion.get('user_token') === S.Config.userToken);
