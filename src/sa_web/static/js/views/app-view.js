@@ -452,7 +452,7 @@ var Shareabouts = Shareabouts || {};
       });
 
       this.setMapView(zoom, lat, lng);
-      this.mapView.showProximityLayer(lng, lat);
+      this.mapView.updateProximitySource(lng, lat);
       this.showPanel();
       locationSummaryView.render();
       this.hideNewPin();

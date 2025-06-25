@@ -32,15 +32,12 @@ var Shareabouts = Shareabouts || {};
         ...config.options, // map options from the config
       });
 
-      // Deck.gl data overlay
-      this.dataOverlay = new deck.MapboxOverlay({
-        interleaved: true,
-      });
+      this.isInitialMapLoadDone = false;
 
-      this.syncDataLayers();
-
-      this.map.once('load', () => {
-        this.map.addControl(this.dataOverlay);
+      this.whenMapLoaded().then(() => {
+        this.makeProximityLayer();
+        this.makeExistingStationsLayer();
+        this.makeStationSuggestionsLayer();
       });
 
       // Customize attribution control
@@ -94,55 +91,104 @@ var Shareabouts = Shareabouts || {};
         }
       });
     }, 1000),
-    ifWhenMapLoaded: function(callback) {
-      if (this.map.loaded()) {
-        callback();
-      } else {
-        this.map.on('load', callback);
-      }
+    whenMapLoaded: function() {
+      return new Promise((resolve) => {
+        if (this.isInitialMapLoadDone) {
+          resolve();
+        } else {
+          this.map.on('load', () => {
+            this.isInitialMapLoadDone = true;
+            resolve();
+          });
+        }
+      });
     },
     syncDataLayers: _.throttle(function() {
-      if (this.dataOverlay === null) { 
-        console.log('Data overlay not initialized yet, skipping syncDataLayers');
+      // Sync data to the station layers if the data are loaded.
+      const startTime = new Date();
+      this.updateExistingStations();
+      this.updateStationSuggestions();
+
+      const endTime = new Date();
+      console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
+    }, 500),
+    updateExistingStations: function() {
+      const existingStationsSource = this.map.getSource('existing-stations');
+      if (!existingStationsSource) {
+        console.warn('No existing stations source found, cannot update existing stations.');
         return;
       }
 
-      // Sync data to the station layers if the data are loaded.
-      const stationsLayer = this.makeStationLayer();
-      const suggestionsLayer = this.makeSuggestionLayer();
-
-      const startTime = new Date();
-      this.dataOverlay.setProps({
-        layers: [suggestionsLayer, stationsLayer]
-      });
-      const endTime = new Date();
-      console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
-    }, 2000),
-    makeStationLayer: function() {
       const data = Bluebikes.stations;
-      const layer = new deck.ScatterplotLayer({
-        id: 'existing-stations',
-        data: data.features,
-        getPosition: s => s.geometry.coordinates,
-        getFillColor: () => [8, 137, 203, 255],
-        getRadius: () => 3,
-        radiusUnits: 'pixels',
-      });
-      return layer;
+      existingStationsSource.setData(data);
     },
-    makeSuggestionLayer: function() {
-      const data = this.collection.models;
-      let fillcount = 0;
-      const layer = new deck.ScatterplotLayer({
-        id: 'station-suggestions',
-        data: data,
-        getPosition: (inst) => {
-          return inst.get('geometry').coordinates
-        },
-        getFillColor: () => [241, 93, 34, 25],
-        getRadius: () => this.options.mapConfig.proximity_radius
-      });
-      return layer;
+    updateStationSuggestions: function() {
+      const suggestionsSource = this.map.getSource('station-suggestions');
+      if (!suggestionsSource) {
+        console.warn('No station suggestions source found, cannot update station suggestions.');
+        return;
+      }
+
+      const radius = this.options.mapConfig.proximity_radius;
+      if (!radius) {
+        console.warn('No proximity radius defined, cannot update station suggestions.');
+        return;
+      }
+
+      const models = this.collection.models;
+      const data = {
+        type: 'FeatureCollection',
+        features: models.map(model => {
+          const center = turf.point(model.get('geometry').coordinates);
+          const properties = model.toJSON();
+          return turf.circle(center, radius, { units: 'meters', properties });
+        }),
+      };
+      suggestionsSource.setData(data);
+    },
+    makeExistingStationsLayer: function() {
+      if (!this.map.getSource('existing-stations')) {
+        this.map.addSource('existing-stations', {
+          type: 'geojson',
+          data: null,
+        });
+      }
+
+      if (!this.map.getLayer('existing-stations-layer')) {
+        this.map.addLayer({
+          'id': 'existing-stations-layer',
+          'type': 'circle',
+          'source': 'existing-stations',
+          'layout': {},
+          'paint': {
+            'circle-radius': 3,
+            'circle-color': '#0889cb',
+            'circle-opacity': 1,
+          },
+        });
+      }
+    },
+    makeStationSuggestionsLayer: function() {
+      if (!this.map.getSource('station-suggestions')) {
+        this.map.addSource('station-suggestions', {
+          type: 'geojson',
+          data: null,
+        });
+      }
+
+      if (!this.map.getLayer('station-suggestions-layer')) {
+        this.map.addLayer({
+          'id': 'station-suggestions-layer',
+          'type': 'fill',
+          'source': 'station-suggestions',
+          'layout': {},
+          'paint': {
+            'fill-color': '#f15d22',
+            'fill-opacity': 0.1,
+            'fill-blur': 1,
+          },
+        }, 'proximity-layer');
+      }
     },
     getProximityData: function(lng, lat) {
       const point = turf.point([lng, lat]);
@@ -172,51 +218,52 @@ var Shareabouts = Shareabouts || {};
       console.log('Proximity data generated:', proximityData);
       return proximityData;
     },
-    updateProximitySource: function(lng, lat) {
-      const proximitySource = this.map.getSource('proximity');
-      if (proximitySource) {
-        proximitySource.setData(this.getProximityData(lng, lat));
-      } else {
-        this.makeProximitySource(lng, lat);
-      }
-    },
-    makeProximitySource: function(lng, lat) {
-      this.ifWhenMapLoaded(() => {
+    makeProximityLayer: function() {
+      if (!this.map.getSource('proximity')) {
         this.map.addSource('proximity', {
           type: 'geojson',
-          data: this.getProximityData(lng, lat),
+          data: null,
         });
-      });
+      }
+
+      if (!this.map.getLayer('proximity-layer')) {
+        this.map.addLayer({
+          'id': 'proximity-layer',
+          'type': 'line',
+          'source': 'proximity',
+          // 'slot': 'top',
+          'layout': {},
+          'paint': {
+            'line-dasharray': [2, 2],
+            'line-width': 2,
+            'line-opacity': 0.55,
+            'line-color': '#000',
+          }
+        });
+      }
     },
-    showProximityLayer: function(lng, lat) {
-      this.ifWhenMapLoaded(() => {
-        this.updateProximitySource(lng, lat);
-  
-        if (!this.map.getLayer('proximity-layer')) {
-          this.map.addLayer({
-            'id': 'proximity-layer',
-            'type': 'line',
-            'source': 'proximity',
-            'layout': {},
-            'paint': {
-              'line-dasharray': [2, 2],
-              'line-width': 2,
-              'line-opacity': 0.5,
-              'line-color': '#000',
-            }
-          });
-        }
-      });
+    updateProximitySource: function(lng, lat) {
+      const proximitySource = this.map.getSource('proximity');
+      if (!proximitySource) {
+        console.warn('No proximity source found, cannot update proximity data.');
+        return;
+      }
+      proximitySource.setData(this.getProximityData(lng, lat));
     },
     hideProximityLayer: function() {
-      if (this.map.getLayer('proximity-layer')) {
-        this.map.removeLayer('proximity-layer');
+      const proximitySource = this.map.getSource('proximity');
+      if (!proximitySource) {
+        console.warn('No proximity source found, cannot hide proximity layer.');
+        return;
       }
+      proximitySource.setData(null);
     },
     render: function() {
       // Clear any existing stuff on the map, and free any views in
       // the list of layer views.
-      this.syncDataLayers();
+      this.whenMapLoaded().then(() => {
+        this.syncDataLayers();
+      });
     },
     updateSize: function() {
       // this.map.invalidateSize({ animate:true, pan:true });
