@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     dirs: {
       // Configurable paths
-      bluebikes_src: 'src/flabors/bluebikes_suggestions/static',
+      bluebikes_src: 'src/flavors/bluebikes_suggestions/static',
       src: 'src/sa_web/static',
       dest: 'src/sa_web/static/dist'
     },
