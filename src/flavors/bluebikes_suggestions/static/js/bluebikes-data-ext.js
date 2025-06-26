@@ -4,16 +4,26 @@ Bluebikes.stationsUrl = 'https://services.arcgis.com/sFnw0xNflSi8J0uh/arcgis/res
 Bluebikes.stations = [];
 Bluebikes.events = Bluebikes.events || new EventTarget();
 
-fetch(Bluebikes.stationsUrl)
-  .then(response => response.json())
-  .then(data => {
+Bluebikes.fetchStations = async (retries = 3) => {
+  try {
+    const response = await fetch(Bluebikes.stationsUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
     Bluebikes.stations = data;
     Bluebikes.events.dispatchEvent(new Event('stationsLoaded'));
-  })
-  .catch(error => {
+  } catch (error) {
     console.error('Error fetching Bluebikes stations:', error);
-    Bluebikes.events.dispatchEvent(new Event('stationsError'));
-  });
+    if (retries > 0) {
+      console.log(`Retrying... (${retries} attempts left)`);
+      return Bluebikes.fetchStations(retries - 1);
+    } else {
+      console.error('Failed to fetch Bluebikes stations after multiple attempts.');
+      Bluebikes.events.dispatchEvent(new Event('stationsError'));
+    }
+  }
+}
 
 Bluebikes.closestStation = (point) => {
   if (!Bluebikes.stations || !Bluebikes.stations.features) {
@@ -33,3 +43,4 @@ Bluebikes.closestStation = (point) => {
   return closest.station;
 }
 
+Bluebikes.fetchStations();

@@ -83,6 +83,7 @@ a.close-btn span {
 /*= Location Summary */
 
 .closest-station-info .station-name,
-.closest-station-info .station-distance {
+.closest-station-info .station-distance,
+.nearby-suggestions-info .suggestion-count {
   font-weight: bold;
 }
