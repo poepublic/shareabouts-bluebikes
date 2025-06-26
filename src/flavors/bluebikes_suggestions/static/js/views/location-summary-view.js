@@ -10,6 +10,10 @@ var Shareabouts = Shareabouts || {};
       this.collection.on('reset', this.onChange, this);
 
       Bluebikes.events.addEventListener('stationsLoaded', this.render.bind(this));
+      $(S).on('reversegeocode', (event, data) => {
+        this.addressOrPlace = data.place_name.replace(/Massachusetts \d{5}, United States/, 'MA') || '(unable to locate place)';
+        this.render();
+      });
     },
 
     render: _.throttle(function() {
@@ -21,6 +25,7 @@ var Shareabouts = Shareabouts || {};
       const isNew = this.options.isNew;
       const point = turf.point([lng, lat]);
       const buffered = turf.buffer(point, radius, {units: 'meters'});
+      const addressOrPlace = this.addressOrPlace || '...';
 
       const suggestions = this.collection.models.filter(suggestion => {
         const suggestionPoint = turf.point(suggestion.get('geometry').coordinates);
@@ -60,6 +65,7 @@ var Shareabouts = Shareabouts || {};
       const data = _.extend({
         isNew,
         lat, lng,
+        addressOrPlace,
         radius,
         youSuggested: yourSuggestions.length > 0,
         othersSuggestionCount: othersSuggestions.length,

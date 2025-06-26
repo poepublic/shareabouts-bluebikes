@@ -79,11 +79,10 @@ var Shareabouts = Shareabouts || {};
       console.log('clicked on the map at:', center);
       this.options.router.navigate(`/${zoom}/${center.lat}/${center.lng}/summary`, {trigger: true});
     },
-    reverseGeocodeMapCenter: _.debounce(function() {
-      var center = this.map.getCenter();
+    reverseGeocodePoint: _.throttle(function(point) {
       var geocodingEngine = this.options.mapConfig.geocoding_engine || 'MapQuest';
 
-      S.Util[geocodingEngine].reverseGeocode(center, {
+      S.Util[geocodingEngine].reverseGeocode(point, {
         success: function(data) {
           var locationData = S.Util[geocodingEngine].getLocation(data);
           // S.Util.console.log('Reverse geocoded center: ', data);
@@ -91,6 +90,10 @@ var Shareabouts = Shareabouts || {};
         }
       });
     }, 1000),
+    reverseGeocodeMapCenter: function() {
+      const ll = this.map.getCenter();
+      this.reverseGeocodePoint(ll);
+    },
     whenMapLoaded: function() {
       return new Promise((resolve) => {
         if (this.isInitialMapLoadDone) {

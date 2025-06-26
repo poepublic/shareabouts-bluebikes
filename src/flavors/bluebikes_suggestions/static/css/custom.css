@@ -1,23 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 :root {
-  --light-gray: #e6e7e7;
+  --bb-dark-blue: #0d4877;
+  --bb-light-blue: #2ca3e1;
+  --bb-black: black;
+  --bb-dark-gray: #59595c;
+  --bb-light-gray: #e6e7e7;
+  --bb-white: white;
 
-  --content-background-color: white;
-  --button-background-color: black;
-  --subtle-button-background-color:var(--light-gray);
-  --subtle-button-text-color: black;
+  --content-background-color: var(--bb-white);
+  --content-text-color: var(--bb-black);
+
+  --map-background-color: var(--bb-light-gray);
+  
+  --button-background-color: var(--bb-black);
+  --subtle-button-background-color: var(--bb-light-gray);
+  --subtle-button-text-color: var(--bb-black);
 }
 
 body {
   font-family: "DM Sans", sans-serif;
   font-optical-sizing: auto;
+  color: var(--content-text-color);
+}
+
+/*= Map Container */
+
+#map {
+  background-color: var(--map-background-color);
 }
 
 /*= Content Panel */
 
-#content {
-  padding: 1rem 3rem 2rem 1rem;
+article h1 {
+  padding-right: 2rem;
 }
 
 a.close-btn {
@@ -50,6 +66,10 @@ a.close-btn span {
     left: auto;
     width: 24rem;
     box-sizing: border-box;
+  }
+
+  article h1 {
+    padding-right: 0;
   }
 
   .content-visible #map-container {

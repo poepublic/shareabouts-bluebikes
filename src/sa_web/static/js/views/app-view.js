@@ -178,11 +178,11 @@ var Shareabouts = Shareabouts || {};
 
       // Bind to map move events so we can style our center points
       // with utmost awesomeness.
-      this.mapView.map.on('movestart', this.onMapMoveStart, this);
-      this.mapView.map.on('moveend', this.onMapMoveEnd, this);
-      this.mapView.map.on('zoomend', this.onMapZoomEnd, this);
+      this.mapView.map.on('movestart', this.onMapMoveStart.bind(this));
+      this.mapView.map.on('moveend', this.onMapMoveEnd.bind(this));
+      this.mapView.map.on('zoomend', this.onMapZoomEnd.bind(this));
       // For knowing if the user has moved the map after opening the form.
-      this.mapView.map.on('dragend', this.onMapDragEnd, this);
+      this.mapView.map.on('dragend', this.onMapDragEnd.bind(this));
 
 
       // This is the "center" when the popup is open
@@ -295,27 +295,28 @@ var Shareabouts = Shareabouts || {};
       }
     },
     onMapZoomEnd: function(evt) {
-      if (this.mapView) {
-        var ll = this.mapView.getCenter(),
-            zoom = this.mapView.getZoom();
+      // if (this.mapView) {
+      //   var ll = this.mapView.getCenter(),
+      //       zoom = this.mapView.getZoom();
 
-        // Never set the placeFormView's latLng until the user does it with a
-        // drag event (below)
-        if (this.placeFormView && this.placeFormView.center) {
-          if (!this.currentMapCenter ||
-              Math.abs(this.currentMapCenter.lat - ll.lat) > 0.0001 ||
-              Math.abs(this.currentMapCenter.lng - ll.lng) > 0.0001) {
-            this.setPlaceFormViewLatLng(ll);
-            this.conditionallyReverseGeocode();
-          }
-        }
-      }
+      //   // Never set the placeFormView's latLng until the user does it with a
+      //   // drag event (below)
+      //   if (this.placeFormView && this.placeFormView.center) {
+      //     if (!this.currentMapCenter ||
+      //         Math.abs(this.currentMapCenter.lat - ll.lat) > 0.0001 ||
+      //         Math.abs(this.currentMapCenter.lng - ll.lng) > 0.0001) {
+      //       this.setPlaceFormViewLatLng(ll);
+      //       this.conditionallyReverseGeocode(ll);
+      //     }
+      //   }
+      // }
     },
     onMapDragEnd: function(evt) {
-      if (this.mapView) {
-        this.setPlaceFormViewLatLng(this.mapView.getCenter());
-        this.conditionallyReverseGeocode();
-      }
+      // if (this.mapView) {
+      //   const ll = this.mapView.getCenter();
+      //   this.setPlaceFormViewLatLng(ll);
+      //   this.conditionallyReverseGeocode(ll);
+      // }
     },
     onClickAddPlaceBtn: function(evt) {
       evt.preventDefault();
@@ -380,9 +381,9 @@ var Shareabouts = Shareabouts || {};
         this.suppressReverseGeocode = false;
       }, timeout);
     },
-    conditionallyReverseGeocode: function() {
+    conditionallyReverseGeocode: function(ll) {
       if (!this.suppressReverseGeocode && this.options.mapConfig.geocoding_enabled) {
-        this.mapView.reverseGeocodeMapCenter();
+        this.mapView.reverseGeocodePoint(ll);
       }
     },
     onRemovePlace: function(model) {
@@ -453,6 +454,7 @@ var Shareabouts = Shareabouts || {};
 
       this.setMapView(zoom, lat, lng);
       this.mapView.updateProximitySource(lng, lat);
+      this.mapView.reverseGeocodePoint({lat, lng});
       this.showPanel();
       locationSummaryView.render();
       this.hideNewPin();
