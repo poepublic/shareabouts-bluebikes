@@ -155,8 +155,8 @@ var Shareabouts = Shareabouts || {};
         features: models.map(model => {
           let halo = this.suggestionHaloCache[model.id];
           if (!halo) {
-          const properties = model.toJSON();
-          const center = turf.point(model.get('geometry').coordinates, properties);
+            const properties = model.toJSON();
+            const center = turf.point(model.get('geometry').coordinates, properties);
             halo = turf.circle(center, radius, { units: 'meters', properties });
             this.suggestionHaloCache[model.id] = halo;
           }
@@ -213,14 +213,14 @@ var Shareabouts = Shareabouts || {};
         // }, 'proximity-layer');
         this.map.addLayer(
           {
-          'id': 'station-suggestions-layer',
-          'type': 'fill',
-          'source': 'station-suggestions',
-          'layout': {},
-          'paint': {
-            'fill-color': "rgb(241, 93, 34)",
-            'fill-opacity': 0.1,
-          },
+            'id': 'station-suggestions-layer',
+            'type': 'fill',
+            'source': 'station-suggestions',
+            'layout': {},
+            'paint': {
+              'fill-color': "rgb(241, 93, 34)",
+              'fill-opacity': 0.1,
+            },
           },
 
           // Add the layer directly under the proximity layer

@@ -1,4 +1,4 @@
-<h1>{{#_}}Summary of Suggestions Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</h1>
+<h1>{{#_}}Suggestions Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</h1>
 
 <p class="nearby-suggestions-info">
 {{#if youSuggested}}
@@ -47,11 +47,11 @@
 {{/if}}
 
 {{#unless youSuggested}}
-<button class="btn btn-primary" id="add-suggestion-button" data-internal href="/place/new">
+<a role="button" class="btn btn-primary" id="add-suggestion-button" rel="internal" href="/place/new">
   {{#is otherSuggestionCount 0}}
     {{#_}}I want more bikeshare here!{{/_}}
   {{else}}
     {{#_}}I want more bikeshare here too!{{/_}}
   {{/is}}
-</button>
+</a>
 {{/unless}}
