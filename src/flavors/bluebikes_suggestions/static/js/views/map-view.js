@@ -54,6 +54,12 @@ var Shareabouts = Shareabouts || {};
         this.initGeocoding();
       }
 
+      // The MapView may be in one of three modes:
+      // 1. Browse mode, where the map is just a map displaying the data layers.
+      // 2. Summarize mode, where the map is displaying a summary of a location.
+      // 3. Suggest mode, where the map is displaying a form to suggest a new location.
+      this.mode = this.options.mode || 'browse';
+
       // Map event logging
       this.map.on('moveend', logUserPan);
       this.map.on('zoomend', logUserZoom);
@@ -268,20 +274,53 @@ var Shareabouts = Shareabouts || {};
       }
       proximitySource.setData(this.getProximityData(lng, lat));
     },
-    hideProximityLayer: function() {
-      const proximitySource = this.map.getSource('proximity');
-      if (!proximitySource) {
-        console.warn('No proximity source found, cannot hide proximity layer.');
+    showProximityLayer: function(setToCenter = false) {
+      const hasProximityLayer = !!this.map.getLayer('proximity-layer');
+      if (!hasProximityLayer) {
+        console.warn('No proximity layer found, cannot hide proximity layer.');
         return;
       }
-      proximitySource.setData(null);
+
+      // If the layer is not visible, update the source too.
+      const isVisible = this.map.getLayoutProperty('proximity-layer', 'visibility') === 'visible';
+      if (setToCenter && !isVisible) {
+        const center = this.map.getCenter();
+        this.updateProximitySource(center.lng, center.lat);
+      }
+      this.map.setLayoutProperty('proximity-layer', 'visibility', 'visible');
+    },
+    hideProximityLayer: function() {
+      const hasProximityLayer = !!this.map.getLayer('proximity-layer');
+      if (!hasProximityLayer) {
+        console.warn('No proximity layer found, cannot hide proximity layer.');
+        return;
+      }
+      this.map.setLayoutProperty('proximity-layer', 'visibility', 'none');
     },
     render: function() {
       // Clear any existing stuff on the map, and free any views in
       // the list of layer views.
       this.whenMapLoaded().then(() => {
         this.syncDataLayers();
+
+        if (this.mode === 'suggest' || this.mode === 'summarize') {
+          // If we're in suggest mode, we need to show the proximity layer.
+          this.showProximityLayer();
+        } else {
+          // Otherwise, hide the proximity layer.
+          this.hideProximityLayer();
+        }
       });
+    },
+    setMode: function(mode) {
+      if (!['browse', 'suggest', 'summarize'].includes(mode)) {
+        throw Error(`Invalid mode: ${mode}`);
+      }
+
+      this.mode = mode;
+      this.render();
+      $(S).trigger('mapmodechange', [mode]);
+      S.Util.log('USER', 'map', 'mode', mode);
     },
     updateSize: function() {
       // this.map.invalidateSize({ animate:true, pan:true });

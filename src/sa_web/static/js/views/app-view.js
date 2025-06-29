@@ -349,8 +349,8 @@ var Shareabouts = Shareabouts || {};
         });
 
         this.$panel.removeClass().addClass('place-form');
+        this.mapView.setMode('suggest');
         this.showPanel(this.placeFormView.render().$el);
-        this.showNewPin();
         this.setBodyClass('content-visible', 'place-form-visible');
       }
     },
@@ -430,6 +430,7 @@ var Shareabouts = Shareabouts || {};
 
     viewMap: function(zoom, lat, lng) {
       this.setMapView(zoom, lat, lng);
+      this.mapView.setMode('browse');
       this.hidePanel();
       this.hideNewPin();
       this.destroyNewModels();
@@ -455,6 +456,7 @@ var Shareabouts = Shareabouts || {};
       this.setMapView(zoom, lat, lng);
       this.mapView.updateProximitySource(lng, lat);
       this.mapView.reverseGeocodePoint({lat, lng});
+      this.mapView.setMode('summarize');
       this.showPanel();
       locationSummaryView.render();
       this.hideNewPin();
