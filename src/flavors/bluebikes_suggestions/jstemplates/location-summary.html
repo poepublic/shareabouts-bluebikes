@@ -46,3 +46,12 @@
 </p>
 {{/if}}
 
+{{#unless youSuggested}}
+<button class="btn btn-primary" id="add-suggestion-button" data-internal href="/place/new">
+  {{#is otherSuggestionCount 0}}
+    {{#_}}I want more bikeshare here!{{/_}}
+  {{else}}
+    {{#_}}I want more bikeshare here too!{{/_}}
+  {{/is}}
+</button>
+{{/unless}}

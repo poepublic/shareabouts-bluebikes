@@ -145,16 +145,25 @@ var Shareabouts = Shareabouts || {};
       }
 
       const models = this.collection.models;
-      const data = {
+
+      // Calculating the halo circles around each suggestion takes a non-trivial
+      // amount of time, so cache the halos for each suggestion as we construct
+      // them.
+      this.suggestionHaloCache = this.suggestionHaloCache || {};
+      const suggestionHaloFeatureCollection = {
         type: 'FeatureCollection',
         features: models.map(model => {
+          let halo = this.suggestionHaloCache[model.id];
+          if (!halo) {
           const properties = model.toJSON();
           const center = turf.point(model.get('geometry').coordinates, properties);
-          const circle = turf.circle(center, radius, { units: 'meters', properties });
-          return circle;
+            halo = turf.circle(center, radius, { units: 'meters', properties });
+            this.suggestionHaloCache[model.id] = halo;
+          }
+          return halo;
         }),
       };
-      suggestionsSource.setData(data);
+      suggestionsSource.setData(suggestionHaloFeatureCollection);
     },
     makeExistingStationsLayer: function() {
       if (!this.map.getSource('existing-stations')) {
@@ -202,7 +211,8 @@ var Shareabouts = Shareabouts || {};
         //     'heatmap-radius': 10,
         //   },
         // }, 'proximity-layer');
-        this.map.addLayer({
+        this.map.addLayer(
+          {
           'id': 'station-suggestions-layer',
           'type': 'fill',
           'source': 'station-suggestions',
@@ -211,7 +221,11 @@ var Shareabouts = Shareabouts || {};
             'fill-color': "rgb(241, 93, 34)",
             'fill-opacity': 0.1,
           },
-        }, 'proximity-layer');
+          },
+
+          // Add the layer directly under the proximity layer
+          'proximity-layer',
+        );
       }
     },
     getProximityData: function(lng, lat) {
