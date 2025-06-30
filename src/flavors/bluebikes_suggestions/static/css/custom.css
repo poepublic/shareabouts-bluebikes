@@ -14,8 +14,13 @@
   --map-background-color: var(--bb-light-gray);
   
   --button-background-color: var(--bb-black);
+  --button-text-color: var(--bb-white);
   --subtle-button-background-color: var(--bb-light-gray);
   --subtle-button-text-color: var(--bb-black);
+
+  --input-border-width: 3px;
+  --input-focused-border-color: var(--bb-black);
+  --input-blurred-border-color: var(--bb-light-gray);
 }
 
 body {
@@ -33,6 +38,7 @@ body {
 /*= Content Panel */
 
 article h1 {
+  font-size: 1.35rem;
   padding-right: 2rem;
 }
 
@@ -69,6 +75,7 @@ a.close-btn span {
   }
 
   article h1 {
+    font-size: 2rem;
     padding-right: 0;
   }
 
@@ -78,6 +85,77 @@ a.close-btn span {
     margin-left: 0;
     width: auto;
   }
+}
+
+/*= Forms */
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.checkbox-group input {
+  width: 1em;
+  height: auto;
+  opacity: 1;
+  position: relative;
+  top: 0;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  text-align: center;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.checkbox-label-text {
+  display: block;
+  flex-grow: 1;
+  border-width: var(--input-border-width);
+  border-radius: calc(1em + var(--input-border-width));
+  border-color: var(--input-blurred-border-color);
+  margin-left: calc(-2em - var(--input-border-width));
+  padding-left: calc(2em + var(--input-border-width));
+  background-color: var(--subtle-button-background-color);
+  color: var(--subtle-button-text-color);
+  line-height: 1em;
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: none;
+}
+
+.checkbox-group input:focus {
+  outline: none;
+}
+
+input:focus + .checkbox-label-text,
+label:hover .checkbox-label-text {
+  color: initial;
+  border-color: var(--input-focused-border-color);
+  background-color: initial;
+}
+
+input:checked + .checkbox-label-text {
+  background-color: var(--button-background-color);
+  color: var(--button-text-color);
+}
+
+input[type="text"] {
+  border-width: 0 0 var(--input-border-width) 0;
+  border-color: var(--input-blurred-border-color);
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--input-focused-border-color);
+}
+
+.place-good_location_other_reason-field,
+.place-another_station_other_reason-field {
+  margin-top: -1em;
 }
 
 /*= Location Summary */

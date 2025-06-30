@@ -124,7 +124,10 @@ place:
       name: good_location_reasons
       required: true
       attrs:
-        - key: required
+        - key: data-group-required
+        - key: data-has-children
+        - key: data-custom-validity
+          value: _(Please select at least one reason why this is a good location.)
       options:
         - label: _(Close to work/school)
           value: work_or_school
@@ -134,7 +137,7 @@ place:
           value: errands
         - label: _(Close to leisure activities)
           value: leisure
-        - label: _(Close to something else)
+        - label: _(Something else)
           value: other
     - prompt: _(Please let us know what else you think this location would be good for.)
       type: text
@@ -142,12 +145,19 @@ place:
       required: true
       attrs:
         - key: required
+        - key: data-parent-field
+          value: good_location_reasons
+        - key: data-parent-value
+          value: other
     - prompt: _(Seems like there's already a station nearby; why would more bikeshare here be useful?)
       type: checkboxgroup
       name: another_station_reasons
       required: true
       attrs:
-        - key: required
+        - key: data-group-required
+        - key: data-has-children
+        - key: data-custom-validity
+          value: _(Please select at least one reason why you think another station is needed.)
       options:
         - label: _(The existing station is too often full/empty)
           value: capacity
@@ -161,6 +171,10 @@ place:
       required: true
       attrs:
         - key: required
+        - key: data-parent-field
+          value: another_station_reasons
+        - key: data-parent-value
+          value: other
 
 pages:
   - title: _(About)
