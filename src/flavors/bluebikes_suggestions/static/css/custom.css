@@ -8,6 +8,9 @@
   --bb-light-gray: #e6e7e7;
   --bb-white: white;
 
+  --header-background-color: var(--bb-light-gray);
+  --header-text-color: var(--bb-black);
+
   --content-background-color: var(--bb-white);
   --content-text-color: var(--bb-black);
 
@@ -21,6 +24,8 @@
   --input-border-width: 3px;
   --input-focused-border-color: var(--bb-black);
   --input-blurred-border-color: var(--bb-light-gray);
+
+  --divider-color: var(--bb-dark-gray);
 }
 
 body {
@@ -29,6 +34,55 @@ body {
   color: var(--content-text-color);
 }
 
+/*= Global Styles */
+
+.btn, .btn:visited, .btn:link {
+  background-color: var(--subtle-button-background-color);
+  color: var(--subtle-button-text-color);
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
+  border-radius: 0.5rem;
+  border-color: var(--input-blurred-border-color);
+  border-width: var(--input-border-width);
+  border-style: solid;
+  text-shadow: none;
+  text-transform: none;;
+}
+
+/*= Site Header */
+
+#nav-btn {
+  background-color: var(--content-background-color);
+  color: var(--content-text-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
+  text-shadow: none;
+  font-weight: lighter;
+  z-index: 1;
+}
+
+#site-header {
+  padding: 0;
+  background-color: var(--header-background-color);
+  color: var(--header-text-color);
+}
+
+#site-title {
+  display: none;
+}
+
+.access.is-exposed {
+  position: absolute;
+  top: -0.5rem;
+  padding-top: 3.5rem;
+  background-color: var(--bb-light-gray);
+}
+
+.access.is-exposed .menu-item .btn {
+  border-radius: 0;
+  border-width: 1px 0;
+  border-color: var(--divider-color);
+  box-shadow: none;
+}
 /*= Map Container */
 
 #map {
@@ -121,7 +175,7 @@ a.close-btn span {
   padding-left: calc(2em + var(--input-border-width));
   background-color: var(--subtle-button-background-color);
   color: var(--subtle-button-text-color);
-  line-height: 1em;
+  line-height: 1;
   font-size: 1em;
   font-weight: bold;
   text-transform: none;

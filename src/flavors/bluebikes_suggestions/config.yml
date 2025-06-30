@@ -1,9 +1,9 @@
 # Settings for the app
 app:
   # HTML Title
-  title: Bluebikes Station Suggestions
+  title: Bluebikes Station Suggestion Map
   # Header name
-  name: Bluebikes Station Suggestions
+  name: Bluebikes Station Suggestion Map
   # Meta description that will show up in Google search results
   meta_description: _(Suggest new Bluebikes station locations across the Boston Metro Area. Share your ideas with the community and help improve the Bluebikes network.)
   # Meta author that will show up in Google search results
