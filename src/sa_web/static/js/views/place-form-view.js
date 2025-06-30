@@ -47,6 +47,12 @@ var Shareabouts = Shareabouts || {};
           return false;
         }
       });
+
+      $(S).on('suggestionlocationchange', (ll) => {
+        // If the app is in suggest mode, set the center point to the new
+        // location.
+        this.setLatLng(ll);
+      });
     },
     render: function(){
       // Augment the model data with place types for the drop down
@@ -80,14 +86,14 @@ var Shareabouts = Shareabouts || {};
     },
     // This is called from the app view
     setLatLng: function(latLng) {
-      this.center = latLng;
+      this.ll = latLng;
       this.$('.drag-marker-instructions, .drag-marker-warning').addClass('is-visuallyhidden');
     },
     setLocation: function(location) {
       // We want to make sure we don't give the user the impression that their
       // location is set when it isn't yet, so only update location-receivers
       // if the center has been set.
-      if (this.center) {
+      if (this.ll) {
         this.location = location;
         this.$('.location-receiver').html(location)
       }
@@ -104,7 +110,7 @@ var Shareabouts = Shareabouts || {};
       // Get the location attributes from the map
       attrs.geometry = {
         type: 'Point',
-        coordinates: [this.center.lng, this.center.lat]
+        coordinates: [this.ll.lng, this.ll.lat]
       };
 
       if (this.location && locationAttr) {
@@ -196,7 +202,7 @@ var Shareabouts = Shareabouts || {};
       // Make sure that the center point has been set after the form was
       // rendered. If not, this is a good indication that the user neglected
       // to move the map to set it in the correct location.
-      if (!this.center) {
+      if (!this.ll) {
         this.$('.drag-marker-instructions').addClass('is-visuallyhidden');
         this.$('.drag-marker-warning').removeClass('is-visuallyhidden');
 

@@ -77,13 +77,52 @@ var Shareabouts = Shareabouts || {};
 
       // Map interaction events
       this.map.on('click', this.handleMapClick.bind(this));
+
+      // Global app events
+      $(S).on('appmodechange', this.handleAppModeChange.bind(this));
+      $(S).on('requestlocationsummary', this.handleRequestLocationSummary.bind(this));
+    },
+    handleAppModeChange: function(mode) {
+      this.render();
     },
     handleMapClick: function(evt) {
       // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/summary.
-      const center = evt.lngLat;
-      const zoom = this.map.getZoom();
-      console.log('clicked on the map at:', center);
-      this.options.router.navigate(`/${zoom}/${center.lat}/${center.lng}/summary`, {trigger: true});
+      const ll = evt.lngLat;
+      const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
+      console.log('clicked on the map at:', ll);
+
+      // Clicking on the map should cause these shifts in mode:
+      // - browse -> summarize
+      // - summarize -> summarize (re-centering on the clicked point)
+      // - suggest -> suggest (updating the proximity layer and map center)
+      // In all of these cases, we want to update the proximity layer and
+      // reverse geocode the clicked point.
+      this.updateProximitySource(ll.lng, ll.lat);
+      this.reverseGeocodePoint(ll);
+
+      // Regardless of the mode, we want to center the map on the clicked point.
+      this.setView(ll.lng, ll.lat, zoom);
+
+      // Let the rest of the app know that the map was clicked.
+      $(S).trigger('mapclick', [ll, zoom]);
+
+      // If the app is in suggest mode, let other components know that the new
+      // location should be set.
+      if (S.mode === 'suggest') {
+        $(S).trigger('suggestionlocationchange', [ll]);
+      }
+    },
+    handleRequestLocationSummary: function(evt, ll, zoom) {
+      // When the app requests a location, we want to center the map on the
+      // requested point and zoom level.
+      this.setView(ll.lng, ll.lat, zoom);
+
+      // Update the proximity layer to reflect the new center point.
+      this.updateProximitySource(ll.lng, ll.lat);
+      this.showProximityLayer();
+
+      // Reverse geocode the point to get the address or place name.
+      this.reverseGeocodePoint(ll);
     },
     reverseGeocodePoint: _.throttle(function(point) {
       var geocodingEngine = this.options.mapConfig.geocoding_engine || 'MapQuest';
@@ -152,7 +191,7 @@ var Shareabouts = Shareabouts || {};
       this.suggestionHaloCache = this.suggestionHaloCache || {};
       const suggestionHaloFeatureCollection = {
         type: 'FeatureCollection',
-        features: models.map(model => {
+        features: models.filter(model => !!model.get('geometry')).map(model => {
           let halo = this.suggestionHaloCache[model.id];
           if (!halo) {
             const properties = model.toJSON();
@@ -317,7 +356,7 @@ var Shareabouts = Shareabouts || {};
       this.whenMapLoaded().then(() => {
         this.syncDataLayers();
 
-        if (this.mode === 'suggest' || this.mode === 'summarize') {
+        if (S.mode === 'suggest' || S.mode === 'summarize') {
           // If we're in suggest mode, we need to show the proximity layer.
           this.showProximityLayer();
         } else {
@@ -325,16 +364,6 @@ var Shareabouts = Shareabouts || {};
           this.hideProximityLayer();
         }
       });
-    },
-    setMode: function(mode) {
-      if (!['browse', 'suggest', 'summarize'].includes(mode)) {
-        throw Error(`Invalid mode: ${mode}`);
-      }
-
-      this.mode = mode;
-      this.render();
-      $(S).trigger('mapmodechange', [mode]);
-      S.Util.log('USER', 'map', 'mode', mode);
     },
     updateSize: function() {
       // this.map.invalidateSize({ animate:true, pan:true });
@@ -473,7 +502,14 @@ var Shareabouts = Shareabouts || {};
       this.map.setView(latLng, this.options.mapConfig.options.maxZoom || 17);
     },
     setView: function(lng, lat, zoom) {
-      // this.map.setView([lat, lng], zoom || this.map.getZoom());
+      const center = this.map.getCenter();
+
+      // If the map is already centered on the point, within 5 decimal places of
+      // tolerance, do nothing.
+      if (Math.abs(center.lng - lng) < 0.00001 && Math.abs(center.lat - lat) < 0.00001) {
+        return;
+      }
+
       this.map.easeTo({
         center: [lng, lat],
         zoom: zoom || this.map.getZoom()

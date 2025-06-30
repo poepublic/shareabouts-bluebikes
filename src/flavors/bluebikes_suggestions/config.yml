@@ -107,7 +107,8 @@ place:
   show_list_button_label: _(List All Suggestions)
   show_map_button_label: _(Show the Map)
   action_text: _(submitted)
-  title: _(Tell us more...)
+  title: _(Suggest New Bikeshare...)
+  help_text: _(Suggestions do not guarantee a station; rather, suggestions are helpful feedback to augment existing processes that determine where and when new stations are added.)
   anonymous_name: _(Someone)
   submit_button_label: _(Submit)
 

@@ -25,9 +25,15 @@ Bluebikes.fetchStations = async (retries = 3) => {
   }
 }
 
+const closestStationCache = {};
 Bluebikes.closestStation = (point) => {
   if (!Bluebikes.stations || !Bluebikes.stations.features) {
     return null;
+  }
+
+  const coordsStr = point.geometry.coordinates.map(coord => coord.toFixed(6)).join(',');
+  if (closestStationCache[coordsStr]) {
+    return closestStationCache[coordsStr];
   }
   
   const stationDistances = Bluebikes.stations.features.map(station => {
@@ -39,6 +45,8 @@ Bluebikes.closestStation = (point) => {
   const closest = stationDistances.reduce((min, current) => {
     return current.distance < min.distance ? current : min;
   });
+
+  closestStationCache[coordsStr] = closest.station;
 
   return closest.station;
 }

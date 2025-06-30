@@ -5,6 +5,12 @@ var Shareabouts = Shareabouts || {};
 (function(S, $, console){
   S.LocationSummaryView = Backbone.View.extend({
     initialize: function() {
+      this.lat = this.options.lat;
+      this.lng = this.options.lng;
+      this.zoom = this.options.zoom;
+      this.radius = this.options.radius;
+      this.isNew = this.options.isNew || false;
+
       this.collection.on('add', this.onChange, this);
       this.collection.on('remove', this.onChange, this);
       this.collection.on('reset', this.onChange, this);
@@ -14,23 +20,43 @@ var Shareabouts = Shareabouts || {};
         this.addressOrPlace = data.place_name.replace(/Massachusetts \d{5}, United States/, 'MA') || '(unable to locate place)';
         this.render();
       });
+
+      $(S).on('requestlocationsummary', (evt, ll, zoom, radius, isNew) => {
+        // If the ll is different (within a tolerance of 5 decimal places),
+        // update the view.
+        if (Math.abs(this.lat - ll.lat) > 0.00001 || Math.abs(this.lng - ll.lng) > 0.00001) {
+          this.lat = ll.lat;
+          this.lng = ll.lng;
+          this.addressOrPlace = null; // Reset address/place to force reverse geocoding
+        }
+
+        this.zoom = zoom || this.zoom;
+        this.radius = radius || this.radius;;
+        this.isNew = isNew || false;
+        this.render();
+      });
     },
 
     render: _.throttle(function() {
+      if (S.mode !== 'summarize') {
+        return this;
+      }
+
       // console.log('Rendering location summary view with options:', this.options);
-      const lat = this.options.lat;
-      const lng = this.options.lng;
-      const zoom = this.options.zoom;
-      const radius = this.options.radius;
-      const isNew = this.options.isNew;
+      const lat = this.lat;
+      const lng = this.lng;
+      const zoom = this.zoom;
+      const radius = this.radius;
+      const isNew = this.isNew;
       const point = turf.point([lng, lat]);
       const buffered = turf.buffer(point, radius, {units: 'meters'});
       const addressOrPlace = this.addressOrPlace || '...';
 
       const suggestions = this.collection.models.filter(suggestion => {
-        const suggestionPoint = turf.point(suggestion.get('geometry').coordinates);
+        const geom = suggestion.get('geometry');
+        if (!geom) return false;
+        const suggestionPoint = turf.point(geom.coordinates);
         return turf.distance(point, suggestionPoint, {units: 'meters'}) <= radius * 2;
-        // return turf.booleanPointInPolygon(suggestionPoint, buffered);
       });
       const yourSuggestions = suggestions.filter(suggestion => suggestion.get('user_token') === S.Config.userToken);
       const othersSuggestions = suggestions.filter(suggestion => suggestion.get('user_token') !== S.Config.userToken);

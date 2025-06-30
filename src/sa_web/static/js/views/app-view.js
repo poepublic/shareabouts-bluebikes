@@ -18,6 +18,18 @@ var Shareabouts = Shareabouts || {};
     left: 'auto'
   };
 
+  S.mode = 'browse'; // Default mode
+
+  S.setAppMode = function(mode) {
+    if (!['browse', 'suggest', 'summarize'].includes(mode)) {
+      throw Error(`Invalid mode: ${mode}`);
+    }
+
+    S.mode = mode;
+    $(S).trigger('appmodechange', [mode]);
+    S.Util.log('USER', 'map', 'mode', mode);
+  }
+
   S.AppView = Backbone.View.extend({
     events: {
       'click #add-place': 'onClickAddPlaceBtn',
@@ -140,6 +152,15 @@ var Shareabouts = Shareabouts || {};
         router: this.options.router,
         placeTypes: this.options.placeTypes
       });
+
+      $(S).on('mapclick', (evt, ll, zoom) => {
+        // If the app is in browse mode or summarize mode, then we want to
+        // navigate to the summary view for the clicked location.
+        if (S.mode === 'browse' || S.mode === 'summarize') {
+          this.options.router.navigate(`/${zoom}/${ll.lat}/${ll.lng}/summary`, {trigger: false});
+          this.viewLocationSummary(zoom, ll.lat, ll.lng, false);
+        }
+      })
 
       // When the user chooses a geocoded address, the address view will fire
       // a geocode event on the namespace. At that point we center the map on
@@ -349,7 +370,7 @@ var Shareabouts = Shareabouts || {};
         });
 
         this.$panel.removeClass().addClass('place-form');
-        this.mapView.setMode('suggest');
+        S.setAppMode('suggest');
         this.showPanel(this.placeFormView.render().$el);
         this.setBodyClass('content-visible', 'place-form-visible');
       }
@@ -430,7 +451,7 @@ var Shareabouts = Shareabouts || {};
 
     viewMap: function(zoom, lat, lng) {
       this.setMapView(zoom, lat, lng);
-      this.mapView.setMode('browse');
+      S.setAppMode('browse');
       this.hidePanel();
       this.hideNewPin();
       this.destroyNewModels();
@@ -444,25 +465,32 @@ var Shareabouts = Shareabouts || {};
       return this.viewPlace(model, responseId, zoom, true)
     },
     viewLocationSummary: function(zoom, lat, lng, isNew) {
-      const proximityRadius = this.options.config.map.proximity_radius; // Default to 50 meters
-      const locationSummaryView = new S.LocationSummaryView({
-        collection: this.collection,
-        el: this.$panelContent,
-        config: this.options.config,
-        radius: proximityRadius,
-        zoom, lat,lng, isNew
-      });
+      S.setAppMode('summarize');
 
-      this.setMapView(zoom, lat, lng);
-      this.mapView.updateProximitySource(lng, lat);
-      this.mapView.reverseGeocodePoint({lat, lng});
-      this.mapView.setMode('summarize');
+      lat = parseFloat(lat);
+      lng = parseFloat(lng);
+      zoom = parseFloat(zoom);
+      
+      const proximityRadius = this.options.config.map.proximity_radius; // Default to 50 meters
+
+      if (!this.locationSummaryView) {
+        this.locationSummaryView = new S.LocationSummaryView({
+          collection: this.collection,
+          el: this.$panelContent,
+          config: this.options.config,
+          radius: proximityRadius,
+          zoom, lat, lng, isNew
+        });
+      }
+
       this.showPanel();
-      locationSummaryView.render();
       this.hideNewPin();
       this.destroyNewModels();
       // this.hideCenterPoint();
       this.setBodyClass('content-visible');
+      
+      // Send an event to request a location summary.
+      $(S).trigger('requestlocationsummary', [{lat, lng}, zoom, proximityRadius, isNew]);
 
       // Trigger a summarize event so that the collection can update its
       // summary data.
