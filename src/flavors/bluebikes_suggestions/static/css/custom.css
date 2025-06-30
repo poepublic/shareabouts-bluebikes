@@ -89,6 +89,27 @@ body {
   background-color: var(--map-background-color);
 }
 
+#map-progress {
+  top: 3.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+}
+
+#place-search-box {
+	position: absolute;
+	z-index: 11;
+	left: 3.5rem;
+	right: 0.5rem;
+	top: 0.5rem;
+	height: 2rem;
+}
+
+#place-search-box input[role="combobox"] {
+  padding: 0 40px;
+  border-width: 0;
+  height: 2.5rem;
+}
+
 /*= Content Panel */
 
 article h1 {

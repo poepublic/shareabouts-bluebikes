@@ -153,7 +153,7 @@ var Shareabouts = Shareabouts || {};
         placeTypes: this.options.placeTypes
       });
 
-      $(S).on('mapclick', (evt, ll, zoom) => {
+      $(S).on('locationselect', (evt, ll, zoom) => {
         // If the app is in browse mode or summarize mode, then we want to
         // navigate to the summary view for the clicked location.
         if (S.mode === 'browse' || S.mode === 'summarize') {
@@ -174,7 +174,7 @@ var Shareabouts = Shareabouts || {};
       // After reverse geocoding, the map view will fire a reversegeocode
       // event. This should only happen when adding a place while geocoding
       // is enabled.
-      $(S).on('reversegeocode', function(evt, locationData) {
+      $(S).on('locationidentify', function(evt, locationData) {
         var geocodingEngine = self.options.mapConfig.geocoding_engine || 'MapQuest';
         var address = S.Util[geocodingEngine].getName(locationData);
         self.setPlaceFormViewLocation(address);

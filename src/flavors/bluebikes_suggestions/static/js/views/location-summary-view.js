@@ -16,7 +16,7 @@ var Shareabouts = Shareabouts || {};
       this.collection.on('reset', this.onChange, this);
 
       Bluebikes.events.addEventListener('stationsLoaded', this.render.bind(this));
-      $(S).on('reversegeocode', (event, data) => {
+      $(S).on('locationidentify', (event, data) => {
         this.addressOrPlace = data.place_name.replace(/Massachusetts \d{5}, United States/, 'MA') || '(unable to locate place)';
         this.render();
       });

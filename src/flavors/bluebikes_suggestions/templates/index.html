@@ -56,9 +56,30 @@
   Additional libraries go here
 -->
 {% block cdn_load %}
-<!-- Mapbox GL -->
-<script src='https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js'></script>
-<link href='https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css' rel='stylesheet' />
+<!-- Mapbox GL & Search -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet" />
+
+<script id="mapbox-search-js" defer src="https://api.mapbox.com/search-js/v1.2.0/web.js"></script>
+<script>
+  const script = document.getElementById('mapbox-search-js');
+  script.onload = function () {
+    const searchBoxElement = new mapboxsearch.MapboxSearchBox();
+    searchBoxElement.id = 'place-search-box';
+    searchBoxElement.accessToken = '{{ settings.MAPBOX_TOKEN }}';
+    searchBoxElement.theme = {
+      variables: {
+        borderRadius: '0.5rem',
+        boxShadow: '0 0 0.5rem rgba(0, 0, 0, 0.25)',
+        fontFamily: '"DM Sans", sans-serif',
+        lineHeight: '1',
+      }
+    };
+
+    const mapContainer = document.getElementById('map-container');
+    mapContainer.insertAdjacentElement('beforebegin', searchBoxElement);
+  };
+</script>
 
 <!-- Deck.GL -->
 <script src="https://unpkg.com/deck.gl@9.1.12/dist.min.js"></script>

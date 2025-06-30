@@ -111,7 +111,7 @@ var Shareabouts = Shareabouts || {};
         success: function(data) {
           var locationData = S.Util[geocodingEngine].getLocation(data);
           // S.Util.console.log('Reverse geocoded center: ', data);
-          $(S).trigger('reversegeocode', [locationData]);
+          $(S).trigger('locationidentify', [locationData]);
         }
       });
     }, 1000),

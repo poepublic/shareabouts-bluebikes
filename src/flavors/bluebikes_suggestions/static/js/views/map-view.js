@@ -32,6 +32,9 @@ var Shareabouts = Shareabouts || {};
         ...config.options, // map options from the config
       });
 
+      this.searchBox = document.getElementById('place-search-box');
+      this.searchBox.bindMap(this.map);
+
       this.isInitialMapLoadDone = false;
 
       this.whenMapLoaded().then(() => {
@@ -76,7 +79,12 @@ var Shareabouts = Shareabouts || {};
       Bluebikes.events.addEventListener('stationsLoaded', this.syncDataLayers.bind(this));
 
       // Map interaction events
-      this.map.on('click', this.handleMapClick.bind(this));
+      this.map.on('click', this.handleLocationSelect.bind(this));
+      this.map.on('dblclick', (evt) => {
+        clearTimeout(this.singleClickTimeout);
+      });
+
+      this.searchBox.addEventListener('retrieve', this.handleSearchBoxRetrieve.bind(this));
 
       // Global app events
       $(S).on('appmodechange', this.handleAppModeChange.bind(this));
@@ -85,32 +93,42 @@ var Shareabouts = Shareabouts || {};
     handleAppModeChange: function(mode) {
       this.render();
     },
-    handleMapClick: function(evt) {
-      // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/summary.
-      const ll = evt.lngLat;
-      const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
-      console.log('clicked on the map at:', ll);
+    handleLocationSelect: function(evt) {
+      clearTimeout(this.singleClickTimeout);
 
-      // Clicking on the map should cause these shifts in mode:
-      // - browse -> summarize
-      // - summarize -> summarize (re-centering on the clicked point)
-      // - suggest -> suggest (updating the proximity layer and map center)
-      // In all of these cases, we want to update the proximity layer and
-      // reverse geocode the clicked point.
-      this.updateProximitySource(ll.lng, ll.lat);
-      this.reverseGeocodePoint(ll);
+      this.singleClickTimeout = setTimeout(() => {
+        if (this.doubleclicked) {
+          // If the user double-clicked, we don't want to do anything.
+          return;
+        }
 
-      // Regardless of the mode, we want to center the map on the clicked point.
-      this.setView(ll.lng, ll.lat, zoom);
+        // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/summary.
+        const ll = evt.lngLat;
+        const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
+        console.log('clicked on the map at:', ll);
 
-      // Let the rest of the app know that the map was clicked.
-      $(S).trigger('mapclick', [ll, zoom]);
+        // Clicking on the map should cause these shifts in mode:
+        // - browse -> summarize
+        // - summarize -> summarize (re-centering on the clicked point)
+        // - suggest -> suggest (updating the proximity layer and map center)
+        // In all of these cases, we want to update the proximity layer and
+        // reverse geocode the clicked point.
+        this.updateProximitySource(ll.lng, ll.lat);
+        this.showProximityLayer();
+        this.reverseGeocodePoint(ll);
 
-      // If the app is in suggest mode, let other components know that the new
-      // location should be set.
-      if (S.mode === 'suggest') {
-        $(S).trigger('suggestionlocationchange', [ll]);
-      }
+        // Regardless of the mode, we want to center the map on the clicked point.
+        this.setView(ll.lng, ll.lat, zoom);
+
+        // Let the rest of the app know that a location has been selected.
+        $(S).trigger('locationselect', [ll, zoom]);
+
+        // If the app is in suggest mode, let other components know that the new
+        // location should be set.
+        if (S.mode === 'suggest') {
+          $(S).trigger('suggestionlocationchange', [ll]);
+        }
+      }, 300);
     },
     handleRequestLocationSummary: function(evt, ll, zoom) {
       // When the app requests a location, we want to center the map on the
@@ -124,6 +142,32 @@ var Shareabouts = Shareabouts || {};
       // Reverse geocode the point to get the address or place name.
       this.reverseGeocodePoint(ll);
     },
+    handleSearchBoxRetrieve: function(evt) {
+      // When the search box retrieves a location, we want to center the map on
+      // the retrieved point and zoom level.
+      const selection = evt.detail;  // The detail is a FeatureCollection.
+      if (!selection || !selection.features || selection.features.length === 0) {
+        console.warn('No features found in search box selection:', selection);
+        return;
+      }
+
+      const feature = selection.features[0];
+      const coords = feature.geometry.coordinates;
+      const ll = { lng: coords[0], lat: coords[1] };
+
+      // Update and show the proximity layer based on the search result.
+      this.updateProximitySource(ll.lng, ll.lat);
+      this.showProximityLayer();
+
+      // Let the rest of the app know that a location has been selected.
+      $(S).trigger('locationselect', [ll, 14]);
+
+      // If the app is in suggest mode, let other components know that the new
+      // location should be set.
+      if (S.mode === 'suggest') {
+        $(S).trigger('suggestionlocationchange', [ll]);
+      }
+    },
     reverseGeocodePoint: _.throttle(function(point) {
       var geocodingEngine = this.options.mapConfig.geocoding_engine || 'MapQuest';
 
@@ -131,7 +175,7 @@ var Shareabouts = Shareabouts || {};
         success: function(data) {
           var locationData = S.Util[geocodingEngine].getLocation(data);
           // S.Util.console.log('Reverse geocoded center: ', data);
-          $(S).trigger('reversegeocode', [locationData]);
+          $(S).trigger('locationidentify', [locationData]);
         }
       });
     }, 1000),
