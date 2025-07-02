@@ -490,7 +490,7 @@ var Shareabouts = Shareabouts || {};
       this.setBodyClass('content-visible');
       
       // Send an event to request a location summary.
-      $(S).trigger('requestlocationsummary', [{lat, lng}, zoom, proximityRadius, isNew]);
+      $(S).trigger('requestlocationsummary', [{lat, lng}, zoom]);
 
       // Trigger a summarize event so that the collection can update its
       // summary data.

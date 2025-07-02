@@ -31,6 +31,7 @@
 body {
   font-family: "DM Sans", sans-serif;
   font-optical-sizing: auto;
+  background-color: var(--map-background-color);
   color: var(--content-text-color);
 }
 
@@ -136,6 +137,11 @@ body {
 article h1 {
   font-size: 1.35rem;
   padding-right: 2rem;
+}
+
+article h2 {
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--bb-light-gray);
 }
 
 a.close-btn {

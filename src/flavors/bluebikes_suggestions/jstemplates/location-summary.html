@@ -1,57 +1,59 @@
-<h1>{{#_}}Suggestions Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</h1>
+{{#if ll}}
+  <p>{{#_}}Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</p>
 
-<p class="nearby-suggestions-info">
-{{#if youSuggested}}
+  <p class="nearby-suggestions-info">
+  {{#if youSuggested}}
 
-  {{#is othersSuggestionCount 0}}
-    <!-- You and 0 other suggestions -->
-    {{#_}}<span class="suggestion-count">You</span> have suggested more bikeshare within about a block of here.{{/_}}
-  {{/is}}
+    {{#is othersSuggestionCount 0}}
+      <!-- You and 0 other suggestions -->
+      {{#_}}<span class="suggestion-count">You</span> have suggested more bikeshare within about a block of here.{{/_}}
+    {{/is}}
 
-  {{#is othersSuggestionCount 1}}
-    <!-- You and 1 other suggestion -->
-    {{#_}}<span class="suggestion-count">You and one other person</span> have suggested more bikeshare within about a block of here.{{/_}}
-  {{/is}}
+    {{#is othersSuggestionCount 1}}
+      <!-- You and 1 other suggestion -->
+      {{#_}}<span class="suggestion-count">You and one other person</span> have suggested more bikeshare within about a block of here.{{/_}}
+    {{/is}}
 
-  {{#gt othersSuggestionCount 1}}
-    <!-- You and more than 1 suggestion -->
-    {{#_}}<span class="suggestion-count">You and {{othersSuggestionCount}} other people</span> have suggested more bikeshare within about a block of here.{{/_}}
-  {{/gt}}
+    {{#gt othersSuggestionCount 1}}
+      <!-- You and more than 1 suggestion -->
+      {{#_}}<span class="suggestion-count">You and {{othersSuggestionCount}} other people</span> have suggested more bikeshare within about a block of here.{{/_}}
+    {{/gt}}
 
-{{else}}
-
-  {{#is othersSuggestionCount 0}}
-    <!-- 0 suggestions -->
-    {{#_}}<span class="suggestion-count">No one</span> has suggested more bikeshare within about a block of here yet.{{/_}}
-  {{/is}}
-
-  {{#is othersSuggestionCount 1}}
-    <!-- 1 suggestion, not you -->
-    {{#_}}<span class="suggestion-count">One other person</span> has suggested more bikeshare within about a block of here.{{/_}}
-  {{/is}}
-
-  {{#gt othersSuggestionCount 1}}
-    <!-- More than 1 suggestion, not you -->
-    {{#_}}<span class="suggestion-count">{{othersSuggestionCount}} other people</span> have suggested more bikeshare within about a block of here.{{/_}}
-  {{/gt}}
-
-{{/if}}
-</p>
-
-{{#if closestStation}}
-<p class="closest-station-info">
-
-  {{#_}}The closest bikeshare station is <span class="station-name">{{closestStationName}}</span> about <span class="station-distance">{{closestStationReadableDistance}} away</span>.{{/_}}
-
-</p>
-{{/if}}
-
-{{#unless youSuggested}}
-<a role="button" class="btn btn-primary" id="add-suggestion-button" rel="internal" href="/place/new">
-  {{#is otherSuggestionCount 0}}
-    {{#_}}I want more bikeshare here!{{/_}}
   {{else}}
-    {{#_}}I want more bikeshare here too!{{/_}}
-  {{/is}}
-</a>
-{{/unless}}
+
+    {{#is othersSuggestionCount 0}}
+      <!-- 0 suggestions -->
+      {{#_}}<span class="suggestion-count">No one</span> has suggested more bikeshare within about a block of here yet.{{/_}}
+    {{/is}}
+
+    {{#is othersSuggestionCount 1}}
+      <!-- 1 suggestion, not you -->
+      {{#_}}<span class="suggestion-count">One other person</span> has suggested more bikeshare within about a block of here.{{/_}}
+    {{/is}}
+
+    {{#gt othersSuggestionCount 1}}
+      <!-- More than 1 suggestion, not you -->
+      {{#_}}<span class="suggestion-count">{{othersSuggestionCount}} other people</span> have suggested more bikeshare within about a block of here.{{/_}}
+    {{/gt}}
+
+  {{/if}}
+  </p>
+
+  {{#if closestStation}}
+  <p class="closest-station-info">
+
+    {{#_}}The closest bikeshare station is <span class="station-name">{{closestStationName}}</span> about <span class="station-distance">{{closestStationReadableDistance}} away</span>.{{/_}}
+
+  </p>
+  {{/if}}
+
+  {{#unless youSuggested}}
+  <h2>
+    {{#is otherSuggestionCount 0}}
+      {{#_}}Want more bikeshare here?{{/_}}
+    {{else}}
+      {{#_}}Want more bikeshare here too?{{/_}}
+    {{/is}}
+  </a>
+  {{/unless}}
+{{/if}}

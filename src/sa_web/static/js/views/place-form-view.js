@@ -48,20 +48,23 @@ var Shareabouts = Shareabouts || {};
         }
       });
 
-      $(S).on('suggestionlocationchange', (ll) => {
+      $(S).on('suggestionlocationchange', (evt, ll) => {
         // If the app is in suggest mode, set the center point to the new
         // location.
         this.setLatLng(ll);
       });
     },
-    render: function(){
-      // Augment the model data with place types for the drop down
-      var data = _.extend({
+    getTemplateData: function() {
+      return _.extend({
         place_config: this.options.placeConfig,
         user_token: this.options.userToken,
         language_code: S.bootstrapped.languageCode,
         current_user: S.currentUser
       }, S.Util.getStickyFields()[this.options.userToken] || {}, this.model.toJSON());
+    },
+    render: function(){
+      // Augment the model data with place types for the drop down
+      var data = this.getTemplateData();
 
       this.$el.html(Handlebars.templates['place-form'](data));
       this.updatedRequiredOptionButtons();

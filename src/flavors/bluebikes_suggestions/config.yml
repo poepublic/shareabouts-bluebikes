@@ -34,6 +34,10 @@ map:
   # "close".
   proximity_radius: 100
 
+  # The minimum zoom level at which the map will show the summary of nearby
+  # suggestions. If the zoom level is below this, we will zoom in.
+  summary_min_zoom: 14
+
   mapbox_access_token: pk.eyJ1IjoicG9lcHVibGljIiwiYSI6ImNtYndzbzJxczB1bXoybHM4bGVibDdmZ2oifQ.QRjUod_UlMasyQWf_CjGnQ
 
   options:
@@ -107,7 +111,7 @@ place:
   show_list_button_label: _(List All Suggestions)
   show_map_button_label: _(Show the Map)
   action_text: _(submitted)
-  title: _(Suggest New Bikeshare...)
+  title: _(Bikeshare Suggestions)
   help_text: _(Suggestions do not guarantee a station; rather, suggestions are helpful feedback to augment existing processes that determine where and when new stations are added.)
   anonymous_name: _(Someone)
   submit_button_label: _(Submit)

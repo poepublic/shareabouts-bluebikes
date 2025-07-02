@@ -133,6 +133,7 @@ var Shareabouts = Shareabouts || {};
     handleRequestLocationSummary: function(evt, ll, zoom) {
       // When the app requests a location, we want to center the map on the
       // requested point and zoom level.
+      zoom = zoom || Math.max(this.map.getZoom(), this.options.mapConfig.summary_min_zoom);
       this.setView(ll.lng, ll.lat, zoom);
 
       // Update the proximity layer to reflect the new center point.
