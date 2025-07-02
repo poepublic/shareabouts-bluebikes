@@ -265,20 +265,51 @@ var Shareabouts = Shareabouts || {};
         this.map.addImage('bluebikes-station-icon', img, { pixelRatio: 1 });
       }
 
-      if (!this.map.getLayer('existing-stations-layer')) {
+      if (!this.map.getLayer('existing-stations-dot-layer')) {
         this.map.addLayer({
-          'id': 'existing-stations-layer',
+          'id': 'existing-stations-dot-layer',
+          'type': 'circle',
+          'source': 'existing-stations',
+          'maxzoom': 13,
+          'paint': {
+            'circle-color': '#2ca3e1',
+            'circle-radius': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              9, 1,
+              13, 4,
+            ],
+            'circle-opacity': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              12, 1,
+              13, 0,
+            ],
+          },
+          'layout': {},
+        });
+      }
+
+      if (!this.map.getLayer('existing-stations-icon-layer')) {
+        this.map.addLayer({
+          'id': 'existing-stations-icon-layer',
           'type': 'symbol',
           'source': 'existing-stations',
+          'minzoom': 12,
           'layout': {
             'icon-anchor': 'center',
             'icon-image': 'bluebikes-station-icon',
-            'icon-size': 0.25,
+            'icon-size': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              13, 0.125,
+              15, 0.25,
+            ],  // The image is 64x64, so this scales it 8x8 up to 16x16.
             'icon-allow-overlap': true,
             'text-field': ['get', 'name'],
           },
           'paint': {},
-        });
+        }, 'existing-stations-dot-layer');
       }
     },
     makeStationSuggestionsLayer: function() {
