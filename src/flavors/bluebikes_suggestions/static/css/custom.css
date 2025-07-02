@@ -168,7 +168,7 @@ article h1 {
   font-size: 1.35rem;
   margin: -1rem -1rem 1rem -1rem;
   padding: 1rem 3rem;
-  background-image: url(/static/css/header-background.png);
+  background-image: url(../img/header-background.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -198,6 +198,12 @@ a.close-btn {
 
 a.close-btn span {
   display: none;
+}
+
+.bluebikes-logo {
+  margin: 2rem auto;
+  max-width: 70%;
+  display: block;
 }
 
 @media (width >= 960px) {
