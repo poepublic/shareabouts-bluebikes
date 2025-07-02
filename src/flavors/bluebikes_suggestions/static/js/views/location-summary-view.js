@@ -45,7 +45,11 @@ var Shareabouts = Shareabouts || {};
     // The reasons are expected to be an array of strings in the suggestion attributes.
     // If no reasons are provided, it defaults to an empty array.
     const suggestionCounts = suggestions.reduce((counts, suggestion) => {
-      for (const reason of suggestion.attributes.reasons || []) {
+      let reasons = suggestion.get('good_location_reasons') || [];
+      if (!Array.isArray(reasons)) {
+        reasons = [reasons]; // Ensure it's an array, not a single string value.
+      }
+      for (const reason of reasons) {
         counts[reason] = counts[reason] || 0;
         counts[reason]++;
       }
@@ -213,6 +217,29 @@ var Shareabouts = Shareabouts || {};
 
         const html = Handlebars.templates['location-summary'](data);
         this.$el.html(html);
+
+        // Draw a chart of the suggestion reasons if available.
+        if (data.suggestionReasons && data.suggestionReasons.length > 0) {
+          const chart = c3.generate({
+            data: {
+              columns: data.suggestionReasons,
+              type : 'pie',
+            },
+            size: {
+              height: 160,
+            },
+            pie: {
+              label: {
+                show: false,
+              },
+            },
+            legend: {
+              position: 'right'
+            },
+          });
+
+          this.$('.suggestion-reasons-chart').html(chart.element);
+        }
       }
 
       // console.log('Rendered location summary view with data:', data, html);

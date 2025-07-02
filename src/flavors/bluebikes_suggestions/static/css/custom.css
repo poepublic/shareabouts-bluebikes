@@ -321,3 +321,8 @@ input[type="text"]:focus {
 .nearby-suggestions-info .suggestion-count {
   font-weight: bold;
 }
+
+.suggestion-reasons-chart {
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+}
