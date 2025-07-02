@@ -91,6 +91,19 @@ body {
   border-color: var(--divider-color);
   box-shadow: none;
 }
+
+@media screen and (width >= 60em) {
+  #site-title {
+    display: block;
+    font-family: "DM Sans", sans-serif;
+    text-shadow: none;
+  }
+
+  #site-title a:link, #site-title a:visited {
+    color: var(--header-text-color);
+  }
+}
+
 /*= Map Container */
 
 #map {
@@ -122,13 +135,27 @@ body {
   background-color: var(--content-background-color);
 }
 
-@media only screen and (width <= 60em) {
+@media only screen and (width < 60em) {
   #map {
     /* transition: height 0.3s ease-in-out; */
   }
 
   body:not(.content-visible) #map {
     height: calc(100vh - 5rem);
+  }
+}
+
+@media only screen and (width >= 60em) {
+  #place-search-box {
+    top: 5.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .content-visible #place-search-box {
+    top: 5.5rem;
+    left: 0.5rem;
+    right: 27.5rem;
   }
 }
 
@@ -180,6 +207,7 @@ a.close-btn span {
     left: auto;
     width: 24rem;
     box-sizing: border-box;
+    box-shadow: -0.325em 0 0.325rem rgba(0,0,0,0.1);
   }
 
   article h1 {
