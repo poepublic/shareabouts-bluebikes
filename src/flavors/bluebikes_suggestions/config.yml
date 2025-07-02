@@ -15,7 +15,7 @@ app:
   # places_page_size: 100
 
   # Optional. List view is supported by default. Set to false to disable.
-  # list_enabled: false
+  list_enabled: false
 
 # Settings for map and layer configs
 map:
@@ -117,12 +117,12 @@ place:
   submit_button_label: _(Submit)
 
   location_item_name: location
+  location_type: suggestion
 
   items:
     - prompt: _(Location Type)
       type: hidden
       name: location_type
-      value: suggestion
     - prompt: _(This is a good location because it is...)
       type: checkboxgroup
       name: good_location_reasons
@@ -162,6 +162,7 @@ place:
         - key: data-has-children
         - key: data-custom-validity
           value: _(Please select at least one reason why you think another station is needed.)
+        - key: data-show-when-close-to-station
       options:
         - label: _(The existing station is too often full/empty)
           value: capacity

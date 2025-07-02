@@ -157,7 +157,7 @@ var Shareabouts = Shareabouts || {};
         // If the app is in browse mode or summarize mode, then we want to
         // navigate to the summary view for the clicked location.
         if (S.mode === 'browse' || S.mode === 'summarize') {
-          this.options.router.navigate(`/${zoom}/${ll.lat}/${ll.lng}/summary`, {trigger: false});
+          this.options.router.navigate(`/${zoom}/${ll.lat}/${ll.lng}/suggestions`, {trigger: false});
           this.viewLocationSummary(zoom, ll.lat, ll.lng, false);
         }
       })
@@ -341,6 +341,7 @@ var Shareabouts = Shareabouts || {};
     },
     onClickAddPlaceBtn: function(evt) {
       evt.preventDefault();
+      this.mapView.updateProximitySource(null);
       S.Util.log('USER', 'map', 'new-place-btn-click');
       this.options.router.navigate('/place/new', {trigger: true});
     },
@@ -465,37 +466,43 @@ var Shareabouts = Shareabouts || {};
       return this.viewPlace(model, responseId, zoom, true)
     },
     viewLocationSummary: function(zoom, lat, lng, isNew) {
-      S.setAppMode('summarize');
+      S.setAppMode('suggest');
 
       lat = parseFloat(lat);
       lng = parseFloat(lng);
       zoom = parseFloat(zoom);
-      
-      const proximityRadius = this.options.config.map.proximity_radius; // Default to 50 meters
 
-      if (!this.locationSummaryView) {
-        this.locationSummaryView = new S.LocationSummaryView({
-          collection: this.collection,
-          el: this.$panelContent,
-          config: this.options.config,
-          radius: proximityRadius,
-          zoom, lat, lng, isNew
-        });
+      this.collection.add({});
+      if (this.placeFormView) {
+        this.placeFormView.setLatLng({lat, lng});
+        this.mapView.setView(lng, lat, zoom);
       }
-
-      this.showPanel();
-      this.hideNewPin();
-      this.destroyNewModels();
-      // this.hideCenterPoint();
-      this.setBodyClass('content-visible');
       
-      // Send an event to request a location summary.
-      $(S).trigger('requestlocationsummary', [{lat, lng}, zoom]);
+      // const proximityRadius = this.options.config.map.proximity_radius; // Default to 50 meters
 
-      // Trigger a summarize event so that the collection can update its
-      // summary data.
-      this.collection.each((model) => model.trigger('unfocus'));
-      this.collection.trigger('summarize');
+      // if (!this.locationSummaryView) {
+      //   this.locationSummaryView = new S.LocationSummaryView({
+      //     collection: this.collection,
+      //     el: this.$panelContent,
+      //     config: this.options.config,
+      //     radius: proximityRadius,
+      //     zoom, lat, lng, isNew
+      //   });
+      // }
+
+      // this.showPanel();
+      // this.hideNewPin();
+      // this.destroyNewModels();
+      // // this.hideCenterPoint();
+      // this.setBodyClass('content-visible');
+      
+      // // Send an event to request a location summary.
+      // $(S).trigger('requestlocationsummary', [{lat, lng}, zoom]);
+
+      // // Trigger a summarize event so that the collection can update its
+      // // summary data.
+      // this.collection.each((model) => model.trigger('unfocus'));
+      // this.collection.trigger('summarize');
     },
     viewPlace: function(model, responseId, zoom, isNew) {
       var self = this,

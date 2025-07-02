@@ -102,7 +102,7 @@ var Shareabouts = Shareabouts || {};
           return;
         }
 
-        // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/summary.
+        // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/suggestions.
         const ll = evt.lngLat;
         const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
         console.log('clicked on the map at:', ll);
@@ -113,7 +113,7 @@ var Shareabouts = Shareabouts || {};
         // - suggest -> suggest (updating the proximity layer and map center)
         // In all of these cases, we want to update the proximity layer and
         // reverse geocode the clicked point.
-        this.updateProximitySource(ll.lng, ll.lat);
+        this.updateProximitySource(ll);
         this.showProximityLayer();
         this.reverseGeocodePoint(ll);
 
@@ -137,7 +137,7 @@ var Shareabouts = Shareabouts || {};
       this.setView(ll.lng, ll.lat, zoom);
 
       // Update the proximity layer to reflect the new center point.
-      this.updateProximitySource(ll.lng, ll.lat);
+      this.updateProximitySource(ll);
       this.showProximityLayer();
 
       // Reverse geocode the point to get the address or place name.
@@ -157,7 +157,7 @@ var Shareabouts = Shareabouts || {};
       const ll = { lng: coords[0], lat: coords[1] };
 
       // Update and show the proximity layer based on the search result.
-      this.updateProximitySource(ll.lng, ll.lat);
+      this.updateProximitySource(ll);
       this.showProximityLayer();
 
       // Let the rest of the app know that a location has been selected.
@@ -312,8 +312,15 @@ var Shareabouts = Shareabouts || {};
         );
       }
     },
-    getProximityData: function(lng, lat) {
-      const point = turf.point([lng, lat]);
+    getProximityData: function(ll) {
+      if (!ll) {
+        return {
+          type: 'FeatureCollection',
+          features: []
+        };
+      }
+
+      const point = turf.point([ll.lng, ll.lat]);
       const radius = this.options.mapConfig.proximity_radius;
       const ring = turf.circle(point, radius, { units: 'meters' });
       
@@ -364,13 +371,13 @@ var Shareabouts = Shareabouts || {};
         });
       }
     },
-    updateProximitySource: function(lng, lat) {
+    updateProximitySource: function(ll) {
       const proximitySource = this.map.getSource('proximity');
       if (!proximitySource) {
         console.warn('No proximity source found, cannot update proximity data.');
         return;
       }
-      proximitySource.setData(this.getProximityData(lng, lat));
+      proximitySource.setData(this.getProximityData(ll));
     },
     showProximityLayer: function(setToCenter = false) {
       const hasProximityLayer = !!this.map.getLayer('proximity-layer');
@@ -383,7 +390,7 @@ var Shareabouts = Shareabouts || {};
       const isVisible = this.map.getLayoutProperty('proximity-layer', 'visibility') === 'visible';
       if (setToCenter && !isVisible) {
         const center = this.map.getCenter();
-        this.updateProximitySource(center.lng, center.lat);
+        this.updateProximitySource(center);
       }
       this.map.setLayoutProperty('proximity-layer', 'visibility', 'visible');
     },

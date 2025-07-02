@@ -1,6 +1,12 @@
 {{#if ll}}
   <p>{{#_}}Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</p>
 
+  {{#if closestStation}}
+  <p class="closest-station-info">
+    {{#_}}The closest bikeshare station is <span class="station-name">{{closestStationName}}</span> about <span class="station-distance">{{closestStationReadableDistance}} away</span>.{{/_}}
+  </p>
+  {{/if}}
+
   <p class="nearby-suggestions-info">
   {{#if youSuggested}}
 
@@ -39,17 +45,9 @@
   {{/if}}
   </p>
 
-  {{#if closestStation}}
-  <p class="closest-station-info">
-
-    {{#_}}The closest bikeshare station is <span class="station-name">{{closestStationName}}</span> about <span class="station-distance">{{closestStationReadableDistance}} away</span>.{{/_}}
-
-  </p>
-  {{/if}}
-
   {{#unless youSuggested}}
   <h2>
-    {{#is otherSuggestionCount 0}}
+    {{#is othersSuggestionCount 0}}
       {{#_}}Want more bikeshare here?{{/_}}
     {{else}}
       {{#_}}Want more bikeshare here too?{{/_}}

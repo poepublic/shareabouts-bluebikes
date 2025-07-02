@@ -7,15 +7,10 @@ var Shareabouts = Shareabouts || {};
     routes: {
       '': 'viewMap',
       'place/new': 'newPlace',
-      'place/:id': 'viewPlace',
-      'place/:id/new': 'viewNewPlace',
-      'place/:id/response/:response_id': 'viewPlace',
-      'place/:id/edit': 'editPlace',
-      'list': 'showList',
       'page/:slug': 'viewPage',
       'filter/:locationtype': 'filterMap',
       ':zoom/:lat/:lng': 'viewMap',
-      ':zoom/:lat/:lng/summary': 'viewLocationSummary',
+      ':zoom/:lat/:lng/suggestions': 'viewLocationSummary',
     },
 
     initialize: function(options) {

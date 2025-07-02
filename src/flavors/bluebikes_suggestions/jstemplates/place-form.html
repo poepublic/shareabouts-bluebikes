@@ -6,6 +6,7 @@
 <div class="location-summary-container">{{> location-summary }}</div>
 
 {{#unless youSuggested}}
+<div data-hide-when-you-suggested>
   <p>{{ place_config.help_text }}</p>
 
   <form id="place-form" class="place-form clearfix">
@@ -24,4 +25,5 @@
     <div class="form-spinner"></div>
 
   </form>
+</div>
 {{/unless}}

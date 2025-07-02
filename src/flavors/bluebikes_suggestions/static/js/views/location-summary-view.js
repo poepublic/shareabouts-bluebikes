@@ -12,6 +12,7 @@ var Shareabouts = Shareabouts || {};
   const PlaceFormView__setLatLng = S.PlaceFormView.prototype.setLatLng;
   S.PlaceFormView.prototype.setLatLng = function(ll) {
     PlaceFormView__setLatLng.call(this, ll);
+
     // Trigger a custom event to update the location summary view.
     // $(S).trigger('requestlocationsummary', [ll]);
     if (this.locationSummaryView) {
@@ -88,7 +89,11 @@ var Shareabouts = Shareabouts || {};
 
   const PlaceFormView__getTemplateData = S.PlaceFormView.prototype.getTemplateData;
   S.PlaceFormView.prototype.getTemplateData = function() {
-    const placeFormData = PlaceFormView__getTemplateData.call(this, arguments);
+    const placeFormData = {
+      ...PlaceFormView__getTemplateData.call(this, arguments),
+      location_type: 'suggestion',
+    };
+    
     if (!this.ll) return placeFormData;
 
     const summaryData = makeSummaryData(this.ll, this.location, this.collection);
@@ -119,6 +124,7 @@ var Shareabouts = Shareabouts || {};
   S.LocationSummaryView = Backbone.View.extend({
     initialize: function() {
       this.ll = null;
+      this.updateFormVisibility(null, null, null)
 
       this.collection.on('add', this.onChange, this);
       this.collection.on('remove', this.onChange, this);
@@ -141,6 +147,51 @@ var Shareabouts = Shareabouts || {};
       });
     },
 
+    updateFormVisibility: function(youSuggested, stationDistance, stationDistanceThreshold) {
+      const parent = this.options.parent;
+
+      // If the user has already suggested a location, hide the form.
+      const form = parent.el.querySelector('[data-hide-when-you-suggested]');
+      if (form && youSuggested) {
+        form.classList.add('hidden');
+      }
+      
+      // If the user has not suggested a location, show the form.
+      else if (form && !youSuggested) {
+        form.classList.remove('hidden');
+      }
+
+      this.requiredHiddenFields = this.requiredHiddenFields || new Set();
+      const fields = parent.el.querySelectorAll('[data-show-when-close-to-station]')
+
+      // If the station is within the threshold distance, show the fields,
+      // restoring any that were previously required.
+      if (stationDistance && stationDistance <= stationDistanceThreshold) {
+        for (const field of fields) {
+          const fieldContainer = field.closest('.field');
+          fieldContainer.classList.remove('hidden');
+
+          if (this.requiredHiddenFields.has(field)) {
+            field.setAttribute('required', 'required');
+            this.requiredHiddenFields.delete(field);
+          }
+        }
+      }
+      
+      // If the station is not within the threshold distance, hide the fields,
+      // remembering which ones were required.
+      else {
+        for (const field of fields) {
+          const fieldContainer = field.closest('.field');
+          fieldContainer.classList.add('hidden');
+
+          if (field.hasAttribute('required')) {
+            this.requiredHiddenFields.add(field);
+            field.removeAttribute('required');
+          }
+        }
+      }
+    },
     render: _.throttle(function() {
       if (S.mode !== 'summarize' && S.mode !== 'suggest') {
         return this;
@@ -154,6 +205,11 @@ var Shareabouts = Shareabouts || {};
           this.addressOrPlace, 
           this.collection,
         );
+
+        const youSuggested = data.youSuggested;
+        const stationDistance = data.closestStationDistance;
+        const stationDistanceThreshold = data.radius;
+        this.updateFormVisibility(youSuggested, stationDistance, stationDistanceThreshold);
 
         const html = Handlebars.templates['location-summary'](data);
         this.$el.html(html);
