@@ -136,7 +136,13 @@ body {
 
 article h1 {
   font-size: 1.35rem;
-  padding-right: 2rem;
+  margin: -1rem -1rem 1rem -1rem;
+  padding: 1rem 3rem;
+  background-image: url(/static/css/header-background.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  color: white;
 }
 
 article h2 {
