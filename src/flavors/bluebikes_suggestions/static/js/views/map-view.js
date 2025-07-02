@@ -160,6 +160,9 @@ var Shareabouts = Shareabouts || {};
       this.updateProximitySource(ll);
       this.showProximityLayer();
 
+      // Reverse geocode the point to get the address or place name.
+      this.reverseGeocodePoint(ll);
+
       // Let the rest of the app know that a location has been selected.
       $(S).trigger('locationselect', [ll, 14]);
 
