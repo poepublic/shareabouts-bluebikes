@@ -257,16 +257,24 @@ var Shareabouts = Shareabouts || {};
         });
       }
 
+      if (!this.map.hasImage('bluebikes-station-icon')) {
+        const img = document.getElementById('bluebikes-station-icon');
+        this.map.addImage('bluebikes-station-icon', img, { pixelRatio: 1 });
+      }
+
       if (!this.map.getLayer('existing-stations-layer')) {
         this.map.addLayer({
           'id': 'existing-stations-layer',
-          'type': 'circle',
+          'type': 'symbol',
           'source': 'existing-stations',
-          'layout': {},
-          'paint': {
-            'circle-radius': 3,
-            'circle-color': "rgba(8, 137, 203, 1)",
+          'layout': {
+            'icon-anchor': 'center',
+            'icon-image': 'bluebikes-station-icon',
+            'icon-size': 0.25,
+            'icon-allow-overlap': true,
+            'text-field': ['get', 'name'],
           },
+          'paint': {},
         });
       }
     },
