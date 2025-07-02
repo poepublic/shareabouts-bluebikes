@@ -5,9 +5,9 @@
 
 <div class="location-summary-container">{{> location-summary }}</div>
 
-{{#unless youSuggested}}
+<p class="highlight suggestion-disclaimer">{{ place_config.help_text }}</p>
+
 <div data-hide-when-you-suggested>
-  <p>{{ place_config.help_text }}</p>
 
   <form id="place-form" class="place-form clearfix">
     <input type="hidden" name="visible" value="on">
@@ -26,4 +26,3 @@
 
   </form>
 </div>
-{{/unless}}

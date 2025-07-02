@@ -14,6 +14,9 @@
   --content-background-color: var(--bb-white);
   --content-text-color: var(--bb-black);
 
+  --highlight-background-color: var(--bb-light-gray);
+  --highlight-text-color: var(--bb-black);
+
   --map-background-color: var(--bb-light-gray);
   
   --button-background-color: var(--bb-black);
@@ -292,6 +295,17 @@ input[type="text"]:focus {
 .place-good_location_other_reason-field,
 .place-another_station_other_reason-field {
   margin-top: -1em;
+}
+
+.highlight {
+  padding: 0.5em;
+  border-radius: 0.5em;
+  background-color: var(--highlight-background-color);
+  color: var(--highlight-text-color);
+}
+
+.suggestion-disclaimer {
+  font-style: italic;
 }
 
 /*= Location Summary */

@@ -1,5 +1,5 @@
 {{#if ll}}
-  <p>{{#_}}Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</p>
+  <p class="highlight suggestion-proximate-address">{{#_}}Near <span class="reverse-geocoded-location">{{addressOrPlace}}</span>{{/_}}</p>
 
   {{#if closestStation}}
   <p class="closest-station-info">
@@ -45,7 +45,9 @@
   {{/if}}
   </p>
 
-  {{#unless youSuggested}}
+  {{#if youSuggested}}
+  <h2>{{#_}}Thank you for your suggestion!{{/_}}</h2>
+  {{else}}
   <h2>
     {{#is othersSuggestionCount 0}}
       {{#_}}Want more bikeshare here?{{/_}}
@@ -53,5 +55,5 @@
       {{#_}}Want more bikeshare here too?{{/_}}
     {{/is}}
   </a>
-  {{/unless}}
+  {{/if}}
 {{/if}}
