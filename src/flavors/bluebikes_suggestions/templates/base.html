@@ -181,6 +181,11 @@
 
   {% comment %} <script src="{{API_ROOT}}users/current?format=jsonp&callback=bootstrapCurrentUser"></script> {% endcomment %}
 
+  <dialog id="thankyou-dialog" class="thankyou-dialog">
+    <a href="#" class="close-btn">&#10005;<span>{% blocktrans %}Close{% endblocktrans %}</span></a>
+    <p>{% translate "Thank you for submitting a station suggestion! Your feedback has been shared with the municipal owners of the Bluebikes system and will be taken into consideration for future station planning."%}</p>
+  </dialog>
+
   {% handlebarsjs '(.*)' precompile register_partials %}
   {% handlebarsjs 'pages/*' precompile %}
 

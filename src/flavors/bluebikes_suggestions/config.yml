@@ -112,7 +112,7 @@ place:
   show_map_button_label: _(Show the Map)
   action_text: _(submitted)
   title: _(Bikeshare Suggestions)
-  help_text: _(Suggestions do not guarantee a station; rather, suggestions are helpful feedback to augment existing processes that determine where and when new stations are added.)
+  help_text: _(Suggestions do not guarantee a station; rather, suggestions are helpful feedback to augment existing processes that determine where and when new stations are added or expanded.)
   anonymous_name: _(Someone)
   submit_button_label: _(Submit)
 
@@ -137,13 +137,15 @@ place:
           value: work_or_school
         - label: _(Close to home/family/friends)
           value: home
+        - label: _(Close to rail, T, or bus station)
+          value: transit
         - label: _(Close to errands)
           value: errands
         - label: _(Close to leisure activities)
           value: leisure
         - label: _(Something else)
           value: other
-    - prompt: _(Please let us know what else you think this location would be good for.)
+    - prompt: _(Please let us know why this would be a good station location.)
       type: text
       name: good_location_other_reason
       required: true
@@ -153,7 +155,7 @@ place:
           value: good_location_reasons
         - key: data-parent-value
           value: other
-    - prompt: _(Seems like there's already a station nearby; why would more bikeshare here be useful?)
+    - prompt: _(Seems like there's already a station nearby; why would an additional or bigger station here be useful?)
       type: checkboxgroup
       name: another_station_reasons
       required: true
@@ -164,13 +166,13 @@ place:
           value: _(Please select at least one reason why you think another station is needed.)
         - key: data-show-when-close-to-station
       options:
-        - label: _(The existing station is too often full/empty)
+        - label: _(The existing station is often too full/empty)
           value: capacity
-        - label: _(The existing station is not close or accessible enough)
+        - label: _(A new/different location would improve accessibility)
           value: accessibility
         - label: _(Something else)
           value: other
-    - prompt: _(Please let us know why else you think another station is needed.)
+    - prompt: _(Please let us know why another station is needed.)
       type: text
       name: another_station_other_reason
       required: true

@@ -12,34 +12,34 @@
 
     {{#is othersSuggestionCount 0}}
       <!-- You and 0 other suggestions -->
-      {{#_}}<span class="suggestion-count">You</span> have suggested more bikeshare within about a block of here.{{/_}}
+      {{#_}}<span class="suggestion-count">You</span> have suggested adding a station within about a block of here.{{/_}}
     {{/is}}
 
     {{#is othersSuggestionCount 1}}
       <!-- You and 1 other suggestion -->
-      {{#_}}<span class="suggestion-count">You and one other person</span> have suggested more bikeshare within about a block of here.{{/_}}
+      {{#_}}<span class="suggestion-count">You and one other person</span> have suggested adding a station within about a block of here.{{/_}}
     {{/is}}
 
     {{#gt othersSuggestionCount 1}}
       <!-- You and more than 1 suggestion -->
-      {{#_}}<span class="suggestion-count">You and {{othersSuggestionCount}} other people</span> have suggested more bikeshare within about a block of here.{{/_}}
+      {{#_}}<span class="suggestion-count">You and {{othersSuggestionCount}} other people</span> have suggested adding a station within about a block of here.{{/_}}
     {{/gt}}
 
   {{else}}
 
     {{#is othersSuggestionCount 0}}
       <!-- 0 suggestions -->
-      {{#_}}<span class="suggestion-count">No one</span> has suggested more bikeshare within about a block of here yet.{{/_}}
+      {{#_}}<span class="suggestion-count">No one</span> has suggested adding a station within about a block of here yet.{{/_}}
     {{/is}}
 
     {{#is othersSuggestionCount 1}}
       <!-- 1 suggestion, not you -->
-      {{#_}}<span class="suggestion-count">One other person</span> has suggested more bikeshare within about a block of here.{{/_}}
+      {{#_}}<span class="suggestion-count">One other person</span> has suggested adding a station within about a block of here.{{/_}}
     {{/is}}
 
     {{#gt othersSuggestionCount 1}}
       <!-- More than 1 suggestion, not you -->
-      {{#_}}<span class="suggestion-count">{{othersSuggestionCount}} other people</span> have suggested more bikeshare within about a block of here.{{/_}}
+      {{#_}}<span class="suggestion-count">{{othersSuggestionCount}} other people</span> have suggested adding a station within about a block of here.{{/_}}
     {{/gt}}
 
   {{/if}}
@@ -52,9 +52,9 @@
   {{else}}
   <h2>
     {{#is othersSuggestionCount 0}}
-      {{#_}}Want more bikeshare here?{{/_}}
+      {{#_}}Want more stations here?{{/_}}
     {{else}}
-      {{#_}}Want more bikeshare here too?{{/_}}
+      {{#_}}Want more stations here too?{{/_}}
     {{/is}}
   </a>
   {{/if}}

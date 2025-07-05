@@ -33,7 +33,8 @@ var Shareabouts = Shareabouts || {};
   S.AppView = Backbone.View.extend({
     events: {
       'click #add-place': 'onClickAddPlaceBtn',
-      'click .close-btn': 'onClickClosePanelBtn'
+      'click #content .close-btn': 'onClickClosePanelBtn',
+      'click dialog .close-btn': 'onClickCloseDialogBtn'
     },
     initialize: function(){
       var self = this,
@@ -354,6 +355,14 @@ var Shareabouts = Shareabouts || {};
         this.options.router.navigate('/', {trigger: true});
       }
     },
+    onClickCloseDialogBtn: function(evt) {
+      evt.preventDefault();
+      S.Util.log('USER', 'dialog', 'close-btn-click');
+      const dialog = evt.currentTarget.closest('dialog');
+      if (dialog && dialog.close) {
+        dialog.close();
+      }
+    },
     // This gets called for every model that gets added to the place
     // collection, not just new ones.
     onAddPlace: function(model) {
@@ -463,6 +472,10 @@ var Shareabouts = Shareabouts || {};
       this.collection.add({});
     },
     viewNewPlace: function(model, responseId, zoom) {
+      const thankyouDialog = document.getElementById('thankyou-dialog');
+      if (thankyouDialog) {
+        thankyouDialog.showModal();
+      }
       return this.viewPlace(model, responseId, zoom, true)
     },
     viewLocationSummary: function(zoom, lat, lng, isNew) {
@@ -511,58 +524,8 @@ var Shareabouts = Shareabouts || {};
           onPlaceFound, onPlaceNotFound, modelId;
 
       onPlaceFound = function(model) {
-        var map = self.mapView.map,
-            layer, center, placeDetailView, $responseToScrollTo;
-
-        // If this model is a duplicate of one that already exists in the
-        // places collection, it may not correspond to a layerView. For this
-        // case, get the model that's actually in the places collection.
-        if (_.isUndefined(self.mapView.layerViews[model.cid])) {
-          model = self.places.get(model.id);
-        }
-
-        layer = self.mapView.layerViews[model.cid].layer;
-        placeDetailView = self.getPlaceDetailView(model);
-
-        if (layer) {
-          center = layer.getLatLng ? layer.getLatLng() : layer.getBounds().getCenter();
-        }
-
-        self.$panel.removeClass().addClass('place-detail place-detail-' + model.id + ' place-detail-' + model.get('location_type'));
-        self.showPanel(placeDetailView.render(isNew).$el, !!responseId);
-        self.hideNewPin();
-        self.destroyNewModels();
-        // self.hideCenterPoint();
-        self.setBodyClass('content-visible');
-
-        if (layer) {
-          if (zoom) {
-            if (layer.getLatLng) {
-              map.setView(center, map.getMaxZoom()-1, {animate: true});
-            } else {
-              map.fitBounds(layer.getBounds());
-            }
-
-          } else {
-            map.panTo(center, {animate: true});
-          }
-        }
-
-        if (responseId) {
-          // get the element based on the id
-          $responseToScrollTo = placeDetailView.$el.find('[data-response-id="'+ responseId +'"]');
-
-          // call scrollIntoView()
-          if ($responseToScrollTo.length > 0) {
-            if (layout === 'desktop') {
-              // For desktop, the panel content is scrollable
-              self.$panelContent.scrollTo($responseToScrollTo, 500);
-            } else {
-              // For mobile, it's the window
-              $(window).scrollTo($responseToScrollTo, 500);
-            }
-          }
-        }
+        const [lng, lat] = model.get('geometry').coordinates;
+        self.viewLocationSummary(zoom, lat, lng, isNew);
 
         // Focus the one we're looking
         model.trigger('focus');

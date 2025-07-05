@@ -7,6 +7,8 @@ var Shareabouts = Shareabouts || {};
     routes: {
       '': 'viewMap',
       'place/new': 'newPlace',
+      'place/:id': 'viewPlace',
+      'place/:id/new': 'viewNewPlace',
       'page/:slug': 'viewPage',
       'filter/:locationtype': 'filterMap',
       ':zoom/:lat/:lng': 'viewMap',
