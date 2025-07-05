@@ -307,8 +307,21 @@ var Shareabouts = Shareabouts || {};
             ],  // The image is 64x64, so this scales it 8x8 up to 16x16.
             'icon-allow-overlap': true,
             'text-field': ['get', 'name'],
+            'text-anchor': 'top',
+            'text-offset': [0, 0.5],
+            'text-size': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              12, 9,
+              18, 12,
+            ],
           },
-          'paint': {},
+          'paint': {
+            'text-color': '#0d4877',
+            'text-halo-color': '#ffffff',
+            'text-halo-width': 1,
+            'text-halo-blur': 1,
+          },
         }, 'existing-stations-dot-layer');
       }
     },
@@ -344,7 +357,7 @@ var Shareabouts = Shareabouts || {};
             'source': 'station-suggestions',
             'layout': {},
             'paint': {
-              'fill-color': "rgb(241, 93, 34)",
+              'fill-color': "#e16a2c",  // <-- Complement of the bluebikes color
               'fill-opacity': 0.1,
             },
           },
