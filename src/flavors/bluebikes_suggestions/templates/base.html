@@ -186,6 +186,11 @@
     <p>{% translate "Thank you for submitting a station suggestion! Your feedback has been shared with the municipal owners of the Bluebikes system and will be taken into consideration for future station planning."%}</p>
   </dialog>
 
+  <dialog id="servicearea-dialog" class="servicearea-dialog">
+    <a href="#" class="close-btn">&#10005;<span>{% blocktrans %}Close{% endblocktrans %}</span></a>
+    <p>{% translate "The location you've chosen is outside of the current Bluebikes service area. "%}</p>
+  </dialog>
+
   {% handlebarsjs '(.*)' precompile register_partials %}
   {% handlebarsjs 'pages/*' precompile %}
 
@@ -206,7 +211,9 @@
       support:    {{ config.support|as_json }},
       map:        {{ config.map|as_json }},
       activity:   {{ config.activity|as_json }},
-      pages:      {{ pages_config_json|safe }}
+      pages:      {{ pages_config_json|safe }},
+      dataPath:   '{% static 'data' %}',
+      staticRoot: '{{ STATIC_URL }}',
     };
 
     $(function() {

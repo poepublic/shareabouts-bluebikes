@@ -95,7 +95,7 @@ var Shareabouts = Shareabouts || {};
     handleLocationSelect: function(evt) {
       clearTimeout(this.singleClickTimeout);
 
-      this.singleClickTimeout = setTimeout(() => {
+      this.singleClickTimeout = setTimeout(async () => {
         if (this.doubleclicked) {
           // If the user double-clicked, we don't want to do anything.
           return;
@@ -105,6 +105,11 @@ var Shareabouts = Shareabouts || {};
         const ll = evt.lngLat;
         const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
         console.log('clicked on the map at:', ll);
+
+        // Make sure the point is in the service area before proceeding.
+        if (!await window.app.enforcePointInServiceArea(ll)) {
+          return;
+        }
 
         // Clicking on the map should cause these shifts in mode:
         // - browse -> summarize
@@ -142,7 +147,7 @@ var Shareabouts = Shareabouts || {};
       // Reverse geocode the point to get the address or place name.
       this.reverseGeocodePoint(ll);
     },
-    handleSearchBoxRetrieve: function(evt) {
+    handleSearchBoxRetrieve: async function(evt) {
       // When the search box retrieves a location, we want to center the map on
       // the retrieved point and zoom level.
       const selection = evt.detail;  // The detail is a FeatureCollection.
@@ -154,6 +159,11 @@ var Shareabouts = Shareabouts || {};
       const feature = selection.features[0];
       const coords = feature.geometry.coordinates;
       const ll = { lng: coords[0], lat: coords[1] };
+
+      // Make sure the point is in the service area before proceeding.
+      if (!await window.app.enforcePointInServiceArea(ll)) {
+        return;
+      }
 
       // Update and show the proximity layer based on the search result.
       this.updateProximitySource(ll);

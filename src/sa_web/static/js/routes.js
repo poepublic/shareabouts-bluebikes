@@ -15,6 +15,27 @@ var Shareabouts = Shareabouts || {};
       ':zoom/:lat/:lng/suggestions': 'viewLocationSummary',
     },
 
+    enforcePointInServiceArea: async function(ll) {
+      if (ll) {
+        const point = turf.point([ll.lng, ll.lat]);
+        const inServiceArea = await Bluebikes.pointIsInServiceArea(point);
+        if (!inServiceArea) {
+          // If the point is not in the service area, show a dialog
+          const serviceAreaDialog = document.getElementById('servicearea-dialog');
+          if (serviceAreaDialog) {
+            serviceAreaDialog.showModal();
+          }
+          return false;
+        }
+
+        return true;
+      }
+
+      // If the ll is null, then we can't check the service area. Return true
+      // to allow the operation to proceed.
+      return true;
+    },
+
     initialize: function(options) {
       var self = this,
           startPageConfig,
