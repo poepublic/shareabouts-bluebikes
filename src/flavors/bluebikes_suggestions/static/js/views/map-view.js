@@ -80,9 +80,8 @@ var Shareabouts = Shareabouts || {};
 
       // Map interaction events
       this.map.on('click', this.handleLocationSelect.bind(this));
-      this.map.on('dblclick', (evt) => {
-        clearTimeout(this.singleClickTimeout);
-      });
+      this.map.on('mousedown', (evt) => { clearTimeout(this.singleClickTimeout) });
+      this.map.on('touchstart', (evt) => { clearTimeout(this.singleClickTimeout) });
 
       this.searchBox.addEventListener('retrieve', this.handleSearchBoxRetrieve.bind(this));
 
