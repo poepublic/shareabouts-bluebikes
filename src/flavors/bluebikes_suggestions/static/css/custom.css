@@ -8,8 +8,9 @@
   --bb-light-gray: #e6e7e7;
   --bb-white: white;
 
-  --header-background-color: var(--bb-light-gray);
+  --header-background-color: var(--bb-white);
   --header-text-color: var(--bb-black);
+  --header-height: 5.5rem;
 
   --content-background-color: var(--bb-white);
   --content-text-color: var(--bb-black);
@@ -72,6 +73,8 @@ body {
 }
 
 #site-header {
+  display: flex;
+  align-items: center;
   padding: 0;
   background-color: var(--header-background-color);
   color: var(--header-text-color);
@@ -79,6 +82,13 @@ body {
 
 #site-title {
   display: none;
+}
+
+#site-title .bluebikes-logo {
+  margin-left: 2rem;
+  height: 1.3rem;
+  width: auto;
+  max-width: none;
 }
 
 .access.is-exposed {
@@ -96,6 +106,10 @@ body {
 }
 
 @media screen and (width >= 60em) {
+  #site-header {
+    height: var(--header-height);
+  }
+  
   #site-title {
     display: block;
     font-family: "DM Sans", sans-serif;
@@ -104,6 +118,42 @@ body {
 
   #site-title a:link, #site-title a:visited {
     color: var(--header-text-color);
+  }
+
+  .access {
+    top: 0;
+    margin: 0;
+    height: 100%;
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .menu li {
+    float: none;
+    margin: 0;
+    height: 100%;
+  }  
+
+  .menu-item .btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    box-shadow: none;
+    border-width: 0 0 0 1px;
+    border-color: var(--bb-light-gray);
+    border-radius: 0;
+    padding: 1.5rem;
+    height: 100%;
+    font-size: 1rem;
+  }
+
+  .menu-item .btn:hover {
+    color: var(--bb-light-blue);
   }
 }
 
@@ -144,19 +194,22 @@ body {
   }
 
   body:not(.content-visible) #map {
-    height: calc(100vh - 5rem);
+    /* There's no good way to account for the location-bar size on a mobile
+    browser, but here I just give it 32 px of room. Then I subtract another
+    10rem for the bottom button and colophon. */
+    height: calc(100vh - 32px - 10rem);
   }
 }
 
 @media only screen and (width >= 60em) {
   #place-search-box {
-    top: 5.5rem;
+    top: calc(var(--header-height) + 0.5rem);
     left: 0.5rem;
     right: 0.5rem;
   }
 
   .content-visible #place-search-box {
-    top: 5.5rem;
+    top: calc(var(--header-height) + 0.5rem);
     left: 0.5rem;
     right: 27.5rem;
   }
@@ -214,6 +267,7 @@ a.close-btn span {
 
   #content {
     left: auto;
+    top: var(--header-height);
     width: 24rem;
     box-sizing: border-box;
     box-shadow: -0.325em 0 0.325rem rgba(0,0,0,0.1);
