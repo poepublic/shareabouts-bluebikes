@@ -55,12 +55,20 @@ var Shareabouts = Shareabouts || {};
       }
       return counts;
     }, {});
+
+    const reasonOptions = S.Config.place.items.find(item => item.name === 'good_location_reasons').options;
     const suggestionReasons = Object.entries(suggestionCounts)
-      .sort((a, b) => a[1] - b[1])
+      .sort((a, b) => b[1] - a[1])  // <- Sort by count, descending
       .map(([reasonCode, count]) => {
-        const reason = reasonCode;
-        return [reasonCode, reason, count, 1.0 * count / suggestions.length];
-      })
+        const reason = reasonOptions.find(option => option.value === reasonCode);
+        return {
+          code: reasonCode,
+          label: reason?.label || reasonCode,
+          color: reason?.color || null, // Default to null if no color is specified
+          count,
+          percentage: 1.0 * count / suggestions.length
+        };
+      });
 
     // Find the closest Bluebikes station to the point.
     const stationDistanceCache = {};
@@ -151,7 +159,7 @@ var Shareabouts = Shareabouts || {};
       });
     },
 
-    updateFormVisibility: function(youSuggested, stationDistance, stationDistanceThreshold) {
+    updateFormVisibility: async function(youSuggested, stationDistance, stationDistanceThreshold) {
       const parent = this.options.parent;
 
       // If the user has already suggested a location, hide the form.
@@ -195,6 +203,16 @@ var Shareabouts = Shareabouts || {};
           }
         }
       }
+
+      // Finally, check if the point is within the Bluebikes service area.
+      // If it is not, hide the form and show a dialog.
+      if (this.ll) {
+        const point = turf.point([this.ll.lng, this.ll.lat]);
+        const inServiceArea = await Bluebikes.pointIsInServiceArea(point);
+        if (form && !inServiceArea) {
+          form.classList.add('hidden');
+        }
+      }
     },
     render: _.throttle(function() {
       if (S.mode !== 'summarize' && S.mode !== 'suggest') {
@@ -222,8 +240,9 @@ var Shareabouts = Shareabouts || {};
         if (data.suggestionReasons && data.suggestionReasons.length > 0) {
           const chart = c3.generate({
             data: {
-              columns: data.suggestionReasons,
-              type : 'pie',
+              columns: data.suggestionReasons.map(reason => [reason.label, reason.percentage]),
+              colors: data.suggestionReasons.reduce((acc, reason) => ({...acc, [reason.label]: reason.color}), {}),
+              type: 'pie',
             },
             size: {
               height: 160,

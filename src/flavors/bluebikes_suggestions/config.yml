@@ -135,16 +135,22 @@ place:
       options:
         - label: _(Close to work/school)
           value: work_or_school
+          color: '#a6cee3'
         - label: _(Close to home/family/friends)
           value: home
+          color: '#1f78b4'
         - label: _(Close to rail, T, or bus station)
           value: transit
+          color: '#b2df8a'
         - label: _(Close to errands)
           value: errands
+          color: '#33a02c'
         - label: _(Close to leisure activities)
           value: leisure
+          color: '#fb9a99'
         - label: _(Something else)
           value: other
+          color: '#e31a1c'
     - prompt: _(Please let us know why this would be a good station location.)
       type: text
       name: good_location_other_reason
