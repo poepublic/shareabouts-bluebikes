@@ -212,7 +212,7 @@
       map:        {{ config.map|as_json }},
       activity:   {{ config.activity|as_json }},
       pages:      {{ pages_config_json|safe }},
-      dataPath:   '{% static 'data' %}',
+      dataPath:   '{{ STATIC_URL}}data',
       staticRoot: '{{ STATIC_URL }}',
     };
 
