@@ -158,6 +158,9 @@ var Shareabouts = Shareabouts || {};
       options: this.options,
     });
 
+    this.locationSummaryView.ll = this.ll;
+    this.locationSummaryView.render();
+
     // Render the location summary view after the place form view is rendered.
     // this.locationSummaryView.render();
     return this;

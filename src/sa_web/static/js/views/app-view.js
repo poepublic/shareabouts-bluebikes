@@ -295,6 +295,7 @@ var Shareabouts = Shareabouts || {};
       }
     },
     destroyPlaceFormView: function() {
+      this.mapView.hideProximityLayer();
       if (this.placeFormView) {
         this.placeFormView.remove();
         this.placeFormView = null;
@@ -488,6 +489,7 @@ var Shareabouts = Shareabouts || {};
       
       if (this.placeFormView) {
         const ll = { lat, lng };
+        this.placeFormView.setLatLng(ll);
         this.syncPlaceFormView(ll);
       } else {
         const geometry = { type: 'Point', coordinates: [lng, lat] };
