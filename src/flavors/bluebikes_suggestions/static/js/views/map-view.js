@@ -232,7 +232,7 @@ var Shareabouts = Shareabouts || {};
       this.suggestionHaloCache = this.suggestionHaloCache || {};
       const suggestionHaloFeatureCollection = {
         type: 'FeatureCollection',
-        features: models.filter(model => !!model.get('geometry')).map(model => {
+        features: models.filter(model => !model.isNew() && !!model.get('geometry')).map(model => {
           let halo = this.suggestionHaloCache[model.id];
           if (!halo) {
             const properties = model.toJSON();
