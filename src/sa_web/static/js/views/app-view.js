@@ -18,18 +18,6 @@ var Shareabouts = Shareabouts || {};
     left: 'auto'
   };
 
-  S.mode = 'browse'; // Default mode
-
-  S.setAppMode = function(mode) {
-    if (!['browse', 'suggest', 'summarize'].includes(mode)) {
-      throw Error(`Invalid mode: ${mode}`);
-    }
-
-    S.mode = mode;
-    $(S).trigger('appmodechange', [mode]);
-    S.Util.log('USER', 'map', 'mode', mode);
-  }
-
   S.AppView = Backbone.View.extend({
     events: {
       'click #add-place': 'onClickAddPlaceBtn',
@@ -157,11 +145,9 @@ var Shareabouts = Shareabouts || {};
       $(S).on('locationselect', (evt, ll, zoom) => {
         // If the app is in browse mode or summarize mode, then we want to
         // navigate to the summary view for the clicked location.
-        if (S.mode === 'browse' || S.mode === 'summarize') {
-          this.options.router.navigate(`/${zoom}/${ll.lat}/${ll.lng}/suggestions`, {trigger: false});
-          this.viewLocationSummary(zoom, ll.lat, ll.lng, false);
-        }
-      })
+        this.options.router.navigate(`/${zoom}/${ll.lat}/${ll.lng}/suggestions`, {trigger: false});
+        this.viewLocationSummary(zoom, ll.lat, ll.lng, false);
+      });
 
       // When the user chooses a geocoded address, the address view will fire
       // a geocode event on the namespace. At that point we center the map on
@@ -297,6 +283,24 @@ var Shareabouts = Shareabouts || {};
         this.placeFormView.setLocation(location);
       }
     },
+    syncPlaceFormView: function(ll) {
+      if (ll) {
+        const zoom = Math.max(this.mapView.map.getZoom(), this.options.mapConfig.summary_min_zoom);
+        this.mapView.whenMapLoaded().then(() => {
+          this.mapView.reverseGeocodePoint(ll);
+          this.mapView.setView(ll.lng, ll.lat, zoom);
+          this.mapView.updateProximitySource(ll);
+          this.mapView.showProximityLayer();
+        });
+      }
+    },
+    destroyPlaceFormView: function() {
+      if (this.placeFormView) {
+        this.placeFormView.remove();
+        this.placeFormView = null;
+      }
+      this.destroyNewModels();
+    },
 
     // These should be in the map view
     onMapMoveStart: function(evt) {
@@ -380,9 +384,10 @@ var Shareabouts = Shareabouts || {};
         });
 
         this.$panel.removeClass().addClass('place-form');
-        S.setAppMode('suggest');
         this.showPanel(this.placeFormView.render().$el);
         this.setBodyClass('content-visible', 'place-form-visible');
+
+        this.syncPlaceFormView(this.placeFormView.ll);
       }
     },
     setBodyClass: function(/* newBodyClasses */) {
@@ -461,10 +466,8 @@ var Shareabouts = Shareabouts || {};
 
     viewMap: function(zoom, lat, lng) {
       this.setMapView(zoom, lat, lng);
-      S.setAppMode('browse');
       this.hidePanel();
       this.hideNewPin();
-      this.destroyNewModels();
       this.setBodyClass();
     },
     newPlace: function() {
@@ -479,43 +482,17 @@ var Shareabouts = Shareabouts || {};
       return this.viewPlace(model, responseId, zoom, true)
     },
     viewLocationSummary: function(zoom, lat, lng, isNew) {
-      S.setAppMode('suggest');
-
       lat = parseFloat(lat);
       lng = parseFloat(lng);
       zoom = parseFloat(zoom);
-
-      this.collection.add({});
+      
       if (this.placeFormView) {
-        this.placeFormView.setLatLng({lat, lng});
-        this.mapView.setView(lng, lat, zoom);
+        const ll = { lat, lng };
+        this.syncPlaceFormView(ll);
+      } else {
+        const geometry = { type: 'Point', coordinates: [lng, lat] };
+        this.collection.add({ geometry });
       }
-      
-      // const proximityRadius = this.options.config.map.proximity_radius; // Default to 50 meters
-
-      // if (!this.locationSummaryView) {
-      //   this.locationSummaryView = new S.LocationSummaryView({
-      //     collection: this.collection,
-      //     el: this.$panelContent,
-      //     config: this.options.config,
-      //     radius: proximityRadius,
-      //     zoom, lat, lng, isNew
-      //   });
-      // }
-
-      // this.showPanel();
-      // this.hideNewPin();
-      // this.destroyNewModels();
-      // // this.hideCenterPoint();
-      // this.setBodyClass('content-visible');
-      
-      // // Send an event to request a location summary.
-      // $(S).trigger('requestlocationsummary', [{lat, lng}, zoom]);
-
-      // // Trigger a summarize event so that the collection can update its
-      // // summary data.
-      // this.collection.each((model) => model.trigger('unfocus'));
-      // this.collection.trigger('summarize');
     },
     viewPlace: function(model, responseId, zoom, isNew) {
       var self = this,
@@ -523,15 +500,12 @@ var Shareabouts = Shareabouts || {};
           layout = S.Util.getPageLayout(),
           onPlaceFound, onPlaceNotFound, modelId;
 
-      onPlaceFound = function(model) {
-        const [lng, lat] = model.get('geometry').coordinates;
-        self.viewLocationSummary(zoom, lat, lng, isNew);
-
-        // Focus the one we're looking
-        model.trigger('focus');
+      onPlaceFound = (model) => {
+        const geometry = model.get('geometry');
+        this.collection.add({ geometry });
       };
 
-      onPlaceNotFound = function() {
+      onPlaceNotFound = () => {
         self.options.router.navigate('/');
       };
 
@@ -569,9 +543,8 @@ var Shareabouts = Shareabouts || {};
 
       this.$panel.removeClass().addClass('page page-' + slug);
       this.showPanel(pageHtml);
-
       this.hideNewPin();
-      this.destroyNewModels();
+      this.destroyPlaceFormView();
       // this.hideCenterPoint();
       this.setBodyClass('content-visible');
     },
@@ -616,9 +589,15 @@ var Shareabouts = Shareabouts || {};
       var map = this.mapView.map;
 
       this.unfocusAllPlaces();
+      this.destroyPlaceFormView();
       this.$panel.hide();
       this.setBodyClass();
       this.mapView.updateSize();
+
+      if (this.placeFormView) {
+        this.placeFormView.remove();
+        this.placeFormView = null;
+      }
 
       S.Util.log('APP', 'panel-state', 'closed');
     },

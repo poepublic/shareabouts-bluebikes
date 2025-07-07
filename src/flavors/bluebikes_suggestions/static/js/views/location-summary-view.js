@@ -7,6 +7,15 @@ var Shareabouts = Shareabouts || {};
   const PlaceFormView__initialize = S.PlaceFormView.prototype.initialize;
   S.PlaceFormView.prototype.initialize = function() {
     PlaceFormView__initialize.call(this, arguments);
+
+    // If the geometry is set, use it to set the initial latitude and longitude.
+    const geometry = this.model.get('geometry');
+    if (geometry && geometry.coordinates) {
+      this.setLatLng({
+        lat: geometry.coordinates[1],
+        lng: geometry.coordinates[0],
+      });
+    }
   }
 
   S.PlaceFormView.prototype.assignJurisdiction = async function() {
@@ -46,8 +55,13 @@ var Shareabouts = Shareabouts || {};
 
     // Get the suggestions within the radius of the point.
     const suggestions = collection.models.filter(suggestion => {
+      // Skip new models that haven't been saved yet.
+      if (suggestion.isNew()) return false;
+
+      // Skip suggestions that don't have a geometry.
       const geom = suggestion.get('geometry');
       if (!geom) return false;
+
       const suggestionPoint = turf.point(geom.coordinates);
       return turf.distance(point, suggestionPoint, {units: 'meters'}) <= radius * 2;
     });
@@ -124,7 +138,7 @@ var Shareabouts = Shareabouts || {};
     
     if (!this.ll) return placeFormData;
 
-    const summaryData = makeSummaryData(this.ll, this.location, this.collection);
+    const summaryData = makeSummaryData(this.ll, this.location, this.options.appView.collection);
 
     return {
       ...placeFormData,
@@ -139,7 +153,7 @@ var Shareabouts = Shareabouts || {};
     const locationSummaryEl = this.$('.location-summary-container');
     this.locationSummaryView = new S.LocationSummaryView({
       parent: this,
-      collection: this.model.collection,
+      collection: this.options.appView.collection,
       el: locationSummaryEl,
       options: this.options,
     });
@@ -231,12 +245,6 @@ var Shareabouts = Shareabouts || {};
       }
     },
     render: _.throttle(function() {
-      if (S.mode !== 'summarize' && S.mode !== 'suggest') {
-        return this;
-      }
-
-      // console.log('Rendering location summary view with options:', this.options);
-      
       if (this.ll) {
         const data = makeSummaryData(
           this.ll,

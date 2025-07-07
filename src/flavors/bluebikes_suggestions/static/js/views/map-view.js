@@ -57,12 +57,6 @@ var Shareabouts = Shareabouts || {};
         this.initGeocoding();
       }
 
-      // The MapView may be in one of three modes:
-      // 1. Browse mode, where the map is just a map displaying the data layers.
-      // 2. Summarize mode, where the map is displaying a summary of a location.
-      // 3. Suggest mode, where the map is displaying a form to suggest a new location.
-      this.mode = this.options.mode || 'browse';
-
       // Map event logging
       this.map.on('moveend', logUserPan);
       this.map.on('zoomend', logUserZoom);
@@ -86,11 +80,7 @@ var Shareabouts = Shareabouts || {};
       this.searchBox.addEventListener('retrieve', this.handleSearchBoxRetrieve.bind(this));
 
       // Global app events
-      $(S).on('appmodechange', this.handleAppModeChange.bind(this));
       $(S).on('requestlocationsummary', this.handleRequestLocationSummary.bind(this));
-    },
-    handleAppModeChange: function(mode) {
-      this.render();
     },
     handleLocationSelect: function(evt) {
       clearTimeout(this.singleClickTimeout);
@@ -111,27 +101,19 @@ var Shareabouts = Shareabouts || {};
           return;
         }
 
-        // Clicking on the map should cause these shifts in mode:
-        // - browse -> summarize
-        // - summarize -> summarize (re-centering on the clicked point)
-        // - suggest -> suggest (updating the proximity layer and map center)
-        // In all of these cases, we want to update the proximity layer and
-        // reverse geocode the clicked point.
+        // Update the proximity layer and reverse geocode the clicked point.
         this.updateProximitySource(ll);
         this.showProximityLayer();
         this.reverseGeocodePoint(ll);
 
-        // Regardless of the mode, we want to center the map on the clicked point.
+        // We want to center the map on the clicked point.
         this.setView(ll.lng, ll.lat, zoom);
 
         // Let the rest of the app know that a location has been selected.
         $(S).trigger('locationselect', [ll, zoom]);
 
-        // If the app is in suggest mode, let other components know that the new
-        // location should be set.
-        if (S.mode === 'suggest') {
-          $(S).trigger('suggestionlocationchange', [ll]);
-        }
+        // Let other components know that the new location should be set.
+        $(S).trigger('suggestionlocationchange', [ll]);
       }, 300);
     },
     handleRequestLocationSummary: function(evt, ll, zoom) {
@@ -175,11 +157,8 @@ var Shareabouts = Shareabouts || {};
       // Let the rest of the app know that a location has been selected.
       $(S).trigger('locationselect', [ll, 14]);
 
-      // If the app is in suggest mode, let other components know that the new
-      // location should be set.
-      if (S.mode === 'suggest') {
-        $(S).trigger('suggestionlocationchange', [ll]);
-      }
+      // Let other components know that the new location should be set.
+      $(S).trigger('suggestionlocationchange', [ll]);
     },
     reverseGeocodePoint: _.throttle(function(point) {
       var geocodingEngine = this.options.mapConfig.geocoding_engine || 'MapQuest';
@@ -472,8 +451,8 @@ var Shareabouts = Shareabouts || {};
       this.whenMapLoaded().then(() => {
         this.syncDataLayers();
 
-        if (S.mode === 'suggest' || S.mode === 'summarize') {
-          // If we're in suggest mode, we need to show the proximity layer.
+        if (this.options.router.appView.isAddingPlace()) {
+          // If we're suggesting, we need to show the proximity layer.
           this.showProximityLayer();
         } else {
           // Otherwise, hide the proximity layer.
