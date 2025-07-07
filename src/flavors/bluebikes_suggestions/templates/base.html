@@ -199,10 +199,7 @@
     // Boostrapping the place types and their icons
     S.Config = {
       defaultPlaceTypeName: '{{ default_place_type }}',
-      userToken: (
-        S.bootstrapped.currentUser ?
-        'user:' + S.bootstrapped.currentUser.id :
-        {{ user_token_json|safe }}),
+      userToken: {{ user_token_json|safe }},
 
       flavor:     {{ config.data|as_json }},
       place:      {{ config.place|as_json }},
