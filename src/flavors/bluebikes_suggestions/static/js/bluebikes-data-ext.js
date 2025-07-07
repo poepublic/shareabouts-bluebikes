@@ -50,6 +50,7 @@ Bluebikes.fetchServiceArea = async (retries = 3) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const serviceArea = await response.json();
+    serviceArea.features = serviceArea.features.map(turf.cleanCoords);
     Bluebikes.serviceArea = serviceArea;
     Bluebikes.events.dispatchEvent(new Event('serviceAreaLoaded'));
   } catch (error) {
@@ -120,7 +121,6 @@ Bluebikes.findCity = async (point) => {
   const cityDistances = serviceArea.features
     .filter(feature => feature.properties.boundary_name !== 'Combined_Service_Area')
     .map(feature => {
-      const cityPoint = turf.centroid(feature);
       const distance = turf.pointToPolygonDistance(point, feature, { units: 'meters' });
       return { feature, distance };
     });
