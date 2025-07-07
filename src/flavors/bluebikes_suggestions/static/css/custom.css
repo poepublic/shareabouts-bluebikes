@@ -173,7 +173,7 @@ body {
 	position: absolute;
 	z-index: 11;
 	left: 3.5rem;
-	right: 0.5rem;
+	right: 3.5rem;
 	top: 0.5rem;
 	height: 2rem;
 }
@@ -186,6 +186,25 @@ body {
 
 #add-place-btn-container {
   background-color: var(--content-background-color);
+}
+
+.geolocation-button-wrapper {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 11;
+}
+
+#geolocation-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  background-color: var(--content-background-color);
+  color: var(--content-text-color);
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
 }
 
 @media only screen and (width < 60em) {
@@ -204,14 +223,20 @@ body {
 @media only screen and (width >= 60em) {
   #place-search-box {
     top: calc(var(--header-height) + 0.5rem);
-    left: 0.5rem;
+    left: 3.5rem;
     right: 0.5rem;
   }
 
   .content-visible #place-search-box {
     top: calc(var(--header-height) + 0.5rem);
-    left: 0.5rem;
+    left: 3.5rem;
     right: 27.5rem;
+  }
+
+  .geolocation-button-wrapper {
+    top: calc(var(--header-height) + 0.5rem);
+    right: auto;
+    left: 0.5rem;
   }
 }
 

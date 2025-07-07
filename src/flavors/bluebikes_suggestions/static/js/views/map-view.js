@@ -96,24 +96,7 @@ var Shareabouts = Shareabouts || {};
         const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
         console.log('clicked on the map at:', ll);
 
-        // Make sure the point is in the service area before proceeding.
-        if (!await window.app.enforcePointInServiceArea(ll)) {
-          return;
-        }
-
-        // Update the proximity layer and reverse geocode the clicked point.
-        this.updateProximitySource(ll);
-        this.showProximityLayer();
-        this.reverseGeocodePoint(ll);
-
-        // We want to center the map on the clicked point.
-        this.setView(ll.lng, ll.lat, zoom);
-
-        // Let the rest of the app know that a location has been selected.
-        $(S).trigger('locationselect', [ll, zoom]);
-
-        // Let other components know that the new location should be set.
-        $(S).trigger('suggestionlocationchange', [ll]);
+        this.selectLocation(ll, zoom);
       }, 300);
     },
     handleRequestLocationSummary: function(evt, ll, zoom) {
@@ -186,6 +169,28 @@ var Shareabouts = Shareabouts || {};
           });
         }
       });
+    },
+    selectLocation: async function(ll, zoom) {
+      console.log(ll);
+
+      // Make sure the point is in the service area before proceeding.
+      if (!await window.app.enforcePointInServiceArea(ll)) {
+        return;
+      }
+
+      // Update the proximity layer and reverse geocode the clicked point.
+      this.updateProximitySource(ll);
+      this.showProximityLayer();
+      this.reverseGeocodePoint(ll);
+
+      // We want to center the map on the clicked point.
+      this.setView(ll.lng, ll.lat, zoom);
+
+      // Let the rest of the app know that a location has been selected.
+      $(S).trigger('locationselect', [ll, zoom]);
+
+      // Let other components know that the new location should be set.
+      $(S).trigger('suggestionlocationchange', [ll]);
     },
     syncDataLayers: _.throttle(function() {
       // Sync data to the station layers if the data are loaded.
@@ -502,11 +507,7 @@ var Shareabouts = Shareabouts || {};
       };
 
       // Add the geolocation control link
-      this.$('.leaflet-top.leaflet-right').append(
-        '<div class="leaflet-control leaflet-bar">' +
-          '<a href="#" class="locate-me" role="button" title="Center on my location" aria-label="Center on my location"></a>' +
-        '</div>'
-      );
+      document.getElementById('geolocation-button').addEventListener('click', this.onClickGeolocate.bind(this));
 
       // Bind event handling
       this.map.on('locationerror', onLocationError);
@@ -573,11 +574,20 @@ var Shareabouts = Shareabouts || {};
     },
     onClickGeolocate: function(evt) {
       evt.preventDefault();
-      S.Util.log('USER', 'map', 'geolocate', this.map.getBounds().toBBoxString(), this.map.getZoom());
+      S.Util.log('USER', 'map', 'geolocate');
       this.geolocate();
     },
     geolocate: function() {
-      this.map.locate();
+      navigator.geolocation.getCurrentPosition((position) => {
+        const ll = {
+          lng: position.coords.longitude,
+          lat: position.coords.latitude
+        };
+        this.selectLocation(ll, this.map.getZoom());
+      }, (error) => {
+        console.error('Geolocation error:', error);
+        alert('Could not determine your location. Please try again.');
+      });
     },
     addLayerView: function(model) {
       this.layerViews[model.cid] = new S.LayerView({

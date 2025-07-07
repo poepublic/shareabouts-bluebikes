@@ -73,6 +73,12 @@
     <div id="geocode-address-bar" class="clearfix"></div>
     {% endif %}
 
+    {% if config.map.geolocation_enabled %}
+    <div class="geolocation-button-wrapper">
+      <a href="#" id="geolocation-button" class="locate-me btn" role="button" title="Center on my location" aria-label="Center on my location"></a>
+    </div>
+    {% endif %}
+
     <div id="map-container">
       <div id="ajax-error-msg">{% blocktrans %}We can't connect to the server at the moment. Hang tight while we re-establish communication.{% endblocktrans %}</div>
       <div id="map-progress" class="progress-bar"><strong>Loading Data&hellip;</strong><span class="current-progress"></span></div>
