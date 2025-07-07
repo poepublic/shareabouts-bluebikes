@@ -368,8 +368,14 @@ input[type="text"]:focus {
   font-style: italic;
 }
 
-.thankyou-dialog {
+dialog {
   padding-right: 3.5rem;
+}
+
+@media screen and (width >= 60em) {
+  dialog a.close-btn {
+    left: auto;
+  }
 }
 
 /*= Location Summary */
