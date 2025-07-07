@@ -9,9 +9,25 @@ var Shareabouts = Shareabouts || {};
     PlaceFormView__initialize.call(this, arguments);
   }
 
+  S.PlaceFormView.prototype.assignJurisdiction = async function() {
+    if (!this.ll) return;
+
+    const point = turf.point([this.ll.lng, this.ll.lat]);
+    if (!await Bluebikes.pointIsInServiceArea(point)) return;
+
+    const jurisdiction = await Bluebikes.findCity(point);
+    if (jurisdiction) {
+      this.model.set('jurisdiction', jurisdiction);
+      this.$('[name=jurisdiction]').val(jurisdiction);
+    }
+  };
+
   const PlaceFormView__setLatLng = S.PlaceFormView.prototype.setLatLng;
   S.PlaceFormView.prototype.setLatLng = function(ll) {
     PlaceFormView__setLatLng.call(this, ll);
+
+    // Update the jurisdiction based on the new location.
+    this.assignJurisdiction();
 
     // Trigger a custom event to update the location summary view.
     // $(S).trigger('requestlocationsummary', [ll]);

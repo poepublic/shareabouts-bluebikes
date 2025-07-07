@@ -123,6 +123,36 @@ place:
     - prompt: _(Location Type)
       type: hidden
       name: location_type
+    - prompt: _(Which jurisdiction does the suggestion fall under?)
+      type: hidden
+      name: jurisdiction
+      options:
+        - label: _(Malden)
+          value: Malden
+        - label: _(Salem)
+          value: Salem
+        - label: _(Revere)
+          value: Revere
+        - label: _(Chelsea)
+          value: Chelsea
+        - label: _(Somerville)
+          value: Somerville
+        - label: _(Arlington)
+          value: Arlington
+        - label: _(Newton)
+          value: Newton
+        - label: _(Cambridge)
+          value: Cambridge
+        - label: _(Boston)
+          value: Boston
+        - label: _(Watertown)
+          value: Watertown
+        - label: _(Medford)
+          value: Medford
+        - label: _(Brookline)
+          value: Brookline
+        - label: _(Everett)
+          value: Everett
     - prompt: _(This is a good location because it is...)
       type: checkboxgroup
       name: good_location_reasons
