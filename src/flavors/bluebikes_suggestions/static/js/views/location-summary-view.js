@@ -265,26 +265,37 @@ var Shareabouts = Shareabouts || {};
 
         // Draw a chart of the suggestion reasons if available.
         if (data.suggestionReasons && data.suggestionReasons.length > 0) {
-          const chart = c3.generate({
-            data: {
-              columns: data.suggestionReasons.map(reason => [reason.label, reason.percentage]),
-              colors: data.suggestionReasons.reduce((acc, reason) => ({...acc, [reason.label]: reason.color}), {}),
-              type: 'pie',
-            },
-            size: {
-              height: 160,
-            },
-            pie: {
-              label: {
-                show: false,
+          if (!this.chart) {
+            this.chart = c3.generate({
+              data: {
+                columns: [], //data.suggestionReasons.map(reason => [reason.label, reason.percentage]),
+                colors: {}, // data.suggestionReasons.reduce((acc, reason) => ({...acc, [reason.label]: reason.color}), {}),
+                type: 'pie',
               },
-            },
-            legend: {
-              position: 'right'
-            },
-          });
+              size: {
+                height: 160,
+              },
+              pie: {
+                label: {
+                  show: false,
+                },
+              },
+              legend: {
+                position: 'right'
+              },
+            });
+          }
 
-          this.$('.suggestion-reasons-chart').html(chart.element);
+          this.$('.suggestion-reasons-chart').html(this.chart.element);
+
+          // Update the chart with the new data
+          const columnsInNewData = new Set(data.suggestionReasons.map(reason => reason.label));
+          const columnsToUnload = this.chart.data().filter(d => !columnsInNewData.has(d.id)).map(d => d.id);
+          this.chart.load({
+            unload: columnsToUnload,
+            columns: data.suggestionReasons.map(reason => [reason.label, reason.percentage]),
+            colors: data.suggestionReasons.reduce((acc, reason) => ({...acc, [reason.label]: reason.color}), {}),
+          });
         }
       }
 
