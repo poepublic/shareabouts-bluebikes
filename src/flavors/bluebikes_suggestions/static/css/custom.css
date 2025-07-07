@@ -390,3 +390,7 @@ dialog {
   margin-top: -1rem;
   margin-bottom: 2rem;
 }
+
+.c3 text {
+  font-family: 'DM Sans', sans-serif;
+}
