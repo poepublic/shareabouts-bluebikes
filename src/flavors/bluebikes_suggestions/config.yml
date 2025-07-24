@@ -49,7 +49,7 @@ map:
       - 42.35383902647486
     zoom: 12.5
     minZoom: 10
-    maxZoom: 16
+    maxZoom: 17
     scrollWheelZoom: false
   layers:
     # Raster Tile Layers

@@ -247,9 +247,16 @@ var Shareabouts = Shareabouts || {};
     },
     makeExistingStationsLayer: function() {
       if (!this.map.getSource('existing-stations')) {
+        // There are some capabilities in Mapbox GL JS that require a unique
+        // _numeric_ ID for each feature. The GBFS data provides a unique
+        // `station_id` for each station, but we need to ensure that the `id`
+        // field in the source is numeric. So, in this case, instead of using
+        // the `station_id` as the ID, we will rely on the `generateId`
+        // attribute on the map source.
         this.map.addSource('existing-stations', {
           type: 'geojson',
           data: null,
+          generateId: true,  // Ensure each feature has a unique numeric ID.
         });
       }
 
@@ -302,6 +309,7 @@ var Shareabouts = Shareabouts || {};
             'text-field': ['get', 'name'],
             'text-anchor': 'top',
             'text-offset': [0, 0.5],
+            'text-optional': true,
             'text-size': ['interpolate',
               ['linear'],
               ['zoom'],
@@ -314,8 +322,64 @@ var Shareabouts = Shareabouts || {};
             'text-halo-color': '#ffffff',
             'text-halo-width': 1,
             'text-halo-blur': 1,
+            'text-opacity': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              13, 0,
+              14, 1,
+            ],
+            // 'text-opacity': ['case',
+            //   ['boolean', ['feature-state', 'hovered'], false],
+            //   1,
+            //   0,
+            // ],
           },
         }, 'existing-stations-dot-layer');
+
+        // ====================================================================
+        // NOTE: We're not using the hovers right now. Instead, we're trying to
+        // use label overlaps smartly. I keep it here in case it's useful as a
+        // reference in the future.
+
+        let hoveredStationId = null;
+
+        const unhoverStation = () => {
+          if (hoveredStationId) {
+            this.map.setFeatureState(
+              { source: 'existing-stations', id: hoveredStationId },
+              { hovered: false }
+            );
+            hoveredStationId = null;
+          }
+        };
+
+        const hoverStation = (stationId) => {
+          if (hoveredStationId !== stationId) {
+            unhoverStation();
+            hoveredStationId = stationId;
+            this.map.setFeatureState(
+              { source: 'existing-stations', id: stationId },
+              { hovered: true }
+            );
+          }
+        };
+        
+        this.map.on('mouseenter', 'existing-stations-icon-layer', (e) => {
+          // Set the station feature state to hovered
+          if (e.features && e.features.length > 0) {
+            const stationId = e.features[0].id;
+            if (!stationId) {
+              console.warn('No station ID found in feature:', e.features[0].properties);
+              return;
+            }
+            hoverStation(stationId);
+          }
+        });
+
+        this.map.on('mouseleave', 'existing-stations-icon-layer', () => {
+          // Reset the station feature state on mouse leave
+          unhoverStation();
+        });
       }
     },
     makeStationSuggestionsLayer: function() {
