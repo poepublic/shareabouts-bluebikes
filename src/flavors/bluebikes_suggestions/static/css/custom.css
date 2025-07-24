@@ -163,6 +163,20 @@ body {
   background-color: var(--map-background-color);
 }
 
+#stations-overlay,
+#suggestions-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;;
+}
+
+#suggestions-overlay canvas {
+  mix-blend-mode: multiply;
+}
+
 #map-progress {
   top: 3.5rem;
   left: 0.5rem;
@@ -212,7 +226,9 @@ body {
     /* transition: height 0.3s ease-in-out; */
   }
 
-  body:not(.content-visible) #map {
+  body:not(.content-visible) #map,
+  body:not(.content-visible) #stations-overlay,
+  body:not(.content-visible) #suggestions-overlay {
     /* There's no good way to account for the location-bar size on a mobile
     browser, but here I just give it 32 px of room. Then I subtract another
     10rem for the bottom button and colophon. */

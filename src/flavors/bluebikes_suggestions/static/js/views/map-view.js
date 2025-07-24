@@ -11,29 +11,47 @@ var Shareabouts = Shareabouts || {};
       var self = this.
           i, layerModel,
           logUserZoom = () => {
-            const bounds = this.map.getBounds();
+            const bounds = this.baseMap.getBounds();
             const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()].join(',');
-            S.Util.log('USER', 'map', 'zoom', `[${bbox}]`, this.map.getZoom());
+            S.Util.log('USER', 'map', 'zoom', `[${bbox}]`, this.baseMap.getZoom());
           },
           logUserPan = (evt) => {
-            const bounds = this.map.getBounds();
+            const bounds = this.baseMap.getBounds();
             const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()].join(',');
-            S.Util.log('USER', 'map', 'drag', `[${bbox}]`, this.map.getZoom());
+            S.Util.log('USER', 'map', 'drag', `[${bbox}]`, this.baseMap.getZoom());
           };
       
       const config = this.options.mapConfig;
+      const baseOptions = config.options || {};
+      const overlayOptions = {...baseOptions};
+      delete overlayOptions.style; // Don't inherit the style from the base map.
 
       // Init the map
       mapboxgl.accessToken = config.mapbox_access_token || S.bootstrapped.mapboxToken;
 
-      this.map = new mapboxgl.Map({
+      this.baseMap = new mapboxgl.Map({
         container: "map", // container id
         attributionControl: false, // disable default attribution
         ...config.options, // map options from the config
       });
+      this.map = this.baseMap; // For compatibility with existing code that uses `this.map`
+
+      this.suggestionsMap = new mapboxgl.Map({
+        container: "suggestions-overlay",
+        style: { "version": 8, "sources": {}, "layers": [], glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf" },
+        ...overlayOptions,
+      });
+
+      this.stationsMap = new mapboxgl.Map({
+        container: "stations-overlay",
+        style: { "version": 8, "sources": {}, "layers": [], glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf" },
+        ...overlayOptions,
+      });
+
+      syncMaps(this.baseMap, this.suggestionsMap, this.stationsMap);
 
       this.searchBox = document.getElementById('place-search-box');
-      this.searchBox.bindMap(this.map);
+      this.searchBox.bindMap(this.baseMap);
 
       this.isInitialMapLoadDone = false;
 
@@ -44,7 +62,7 @@ var Shareabouts = Shareabouts || {};
       });
 
       // Customize attribution control
-      this.map.addControl(new mapboxgl.AttributionControl({
+      this.baseMap.addControl(new mapboxgl.AttributionControl({
           customAttribution: ''
         }));
 
@@ -58,10 +76,10 @@ var Shareabouts = Shareabouts || {};
       }
 
       // Map event logging
-      this.map.on('moveend', logUserPan);
-      this.map.on('zoomend', logUserZoom);
+      this.baseMap.on('moveend', logUserPan);
+      this.baseMap.on('zoomend', logUserZoom);
 
-      this.map.on('moveend', function(evt) {
+      this.baseMap.on('moveend', function(evt) {
         $(S).trigger('mapmoveend', [evt]);
         $(S).trigger('mapdragend', [evt]);
       });
@@ -73,9 +91,9 @@ var Shareabouts = Shareabouts || {};
       Bluebikes.events.addEventListener('stationsLoaded', this.syncDataLayers.bind(this));
 
       // Map interaction events
-      this.map.on('click', this.handleLocationSelect.bind(this));
-      this.map.on('mousedown', (evt) => { clearTimeout(this.singleClickTimeout) });
-      this.map.on('touchstart', (evt) => { clearTimeout(this.singleClickTimeout) });
+      this.baseMap.on('click', this.handleLocationSelect.bind(this));
+      this.baseMap.on('mousedown', (evt) => { clearTimeout(this.singleClickTimeout) });
+      this.baseMap.on('touchstart', (evt) => { clearTimeout(this.singleClickTimeout) });
 
       this.searchBox.addEventListener('retrieve', this.handleSearchBoxRetrieve.bind(this));
 
@@ -93,7 +111,7 @@ var Shareabouts = Shareabouts || {};
 
         // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/suggestions.
         const ll = evt.lngLat;
-        const zoom = this.map.getZoom() < 14 ? 14 : this.map.getZoom();
+        const zoom = this.baseMap.getZoom() < 14 ? 14 : this.baseMap.getZoom();
         console.log('clicked on the map at:', ll);
 
         this.selectLocation(ll, zoom);
@@ -102,7 +120,7 @@ var Shareabouts = Shareabouts || {};
     handleRequestLocationSummary: function(evt, ll, zoom) {
       // When the app requests a location, we want to center the map on the
       // requested point and zoom level.
-      zoom = zoom || Math.max(this.map.getZoom(), this.options.mapConfig.summary_min_zoom);
+      zoom = zoom || Math.max(this.baseMap.getZoom(), this.options.mapConfig.summary_min_zoom);
       this.setView(ll.lng, ll.lat, zoom);
 
       // Update the proximity layer to reflect the new center point.
@@ -155,7 +173,7 @@ var Shareabouts = Shareabouts || {};
       });
     }, 1000),
     reverseGeocodeMapCenter: function() {
-      const ll = this.map.getCenter();
+      const ll = this.baseMap.getCenter();
       this.reverseGeocodePoint(ll);
     },
     whenMapLoaded: function() {
@@ -163,7 +181,7 @@ var Shareabouts = Shareabouts || {};
         if (this.isInitialMapLoadDone) {
           resolve();
         } else {
-          this.map.on('load', () => {
+          this.baseMap.on('load', () => {
             this.isInitialMapLoadDone = true;
             resolve();
           });
@@ -202,7 +220,7 @@ var Shareabouts = Shareabouts || {};
       console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
     }, 500),
     updateExistingStations: function() {
-      const existingStationsSource = this.map.getSource('existing-stations');
+      const existingStationsSource = this.baseMap.getSource('existing-stations');
       if (!existingStationsSource) {
         console.warn('No existing stations source found, cannot update existing stations.');
         return;
@@ -212,7 +230,7 @@ var Shareabouts = Shareabouts || {};
       existingStationsSource.setData(data);
     },
     updateStationSuggestions: function() {
-      const suggestionsSource = this.map.getSource('station-suggestions');
+      const suggestionsSource = this.suggestionsMap.getSource('station-suggestions');
       if (!suggestionsSource) {
         console.warn('No station suggestions source found, cannot update station suggestions.');
         return;
@@ -246,27 +264,27 @@ var Shareabouts = Shareabouts || {};
       suggestionsSource.setData(suggestionHaloFeatureCollection);
     },
     makeExistingStationsLayer: function() {
-      if (!this.map.getSource('existing-stations')) {
+      if (!this.stationsMap.getSource('existing-stations')) {
         // There are some capabilities in Mapbox GL JS that require a unique
         // _numeric_ ID for each feature. The GBFS data provides a unique
         // `station_id` for each station, but we need to ensure that the `id`
         // field in the source is numeric. So, in this case, instead of using
         // the `station_id` as the ID, we will rely on the `generateId`
         // attribute on the map source.
-        this.map.addSource('existing-stations', {
+        this.stationsMap.addSource('existing-stations', {
           type: 'geojson',
           data: null,
           generateId: true,  // Ensure each feature has a unique numeric ID.
         });
       }
 
-      if (!this.map.hasImage('bluebikes-station-icon')) {
+      if (!this.stationsMap.hasImage('bluebikes-station-icon')) {
         const img = document.getElementById('bluebikes-station-icon');
-        this.map.addImage('bluebikes-station-icon', img, { pixelRatio: 1 });
+        this.stationsMap.addImage('bluebikes-station-icon', img, { pixelRatio: 1 });
       }
 
-      if (!this.map.getLayer('existing-stations-dot-layer')) {
-        this.map.addLayer({
+      if (!this.stationsMap.getLayer('existing-stations-dot-layer')) {
+        this.stationsMap.addLayer({
           'id': 'existing-stations-dot-layer',
           'type': 'circle',
           'source': 'existing-stations',
@@ -290,108 +308,108 @@ var Shareabouts = Shareabouts || {};
         });
       }
 
-      if (!this.map.getLayer('existing-stations-icon-layer')) {
-        this.map.addLayer({
-          'id': 'existing-stations-icon-layer',
-          'type': 'symbol',
-          'source': 'existing-stations',
-          'minzoom': 12,
-          'layout': {
-            'icon-anchor': 'center',
-            'icon-image': 'bluebikes-station-icon',
-            'icon-size': ['interpolate',
-              ['linear'],
-              ['zoom'],
-              13, 0.125,
-              15, 0.25,
-            ],  // The image is 64x64, so this scales it 8x8 up to 16x16.
-            'icon-allow-overlap': true,
-            'text-field': ['get', 'name'],
-            'text-anchor': 'top',
-            'text-offset': [0, 0.5],
-            'text-optional': true,
-            'text-size': ['interpolate',
-              ['linear'],
-              ['zoom'],
-              12, 9,
-              18, 12,
-            ],
-          },
-          'paint': {
-            'text-color': '#0d4877',
-            'text-halo-color': '#ffffff',
-            'text-halo-width': 1,
-            'text-halo-blur': 1,
-            'text-opacity': ['interpolate',
-              ['linear'],
-              ['zoom'],
-              13, 0,
-              14, 1,
-            ],
-            // 'text-opacity': ['case',
-            //   ['boolean', ['feature-state', 'hovered'], false],
-            //   1,
-            //   0,
-            // ],
-          },
-        }, 'existing-stations-dot-layer');
+      // if (!this.stationsMap.getLayer('existing-stations-icon-layer')) {
+      //   this.stationsMap.addLayer({
+      //     'id': 'existing-stations-icon-layer',
+      //     'type': 'symbol',
+      //     'source': 'existing-stations',
+      //     'minzoom': 12,
+      //     'layout': {
+      //       'icon-anchor': 'center',
+      //       'icon-image': 'bluebikes-station-icon',
+      //       'icon-size': ['interpolate',
+      //         ['linear'],
+      //         ['zoom'],
+      //         13, 0.125,
+      //         15, 0.25,
+      //       ],  // The image is 64x64, so this scales it 8x8 up to 16x16.
+      //       'icon-allow-overlap': true,
+      //       'text-field': ['get', 'name'],
+      //       'text-anchor': 'top',
+      //       'text-offset': [0, 0.5],
+      //       'text-optional': true,
+      //       'text-size': ['interpolate',
+      //         ['linear'],
+      //         ['zoom'],
+      //         12, 9,
+      //         18, 12,
+      //       ],
+      //     },
+      //     'paint': {
+      //       'text-color': '#0d4877',
+      //       'text-halo-color': '#ffffff',
+      //       'text-halo-width': 1,
+      //       'text-halo-blur': 1,
+      //       'text-opacity': ['interpolate',
+      //         ['linear'],
+      //         ['zoom'],
+      //         13, 0,
+      //         14, 1,
+      //       ],
+      //       // 'text-opacity': ['case',
+      //       //   ['boolean', ['feature-state', 'hovered'], false],
+      //       //   1,
+      //       //   0,
+      //       // ],
+      //     },
+      //   }, 'existing-stations-dot-layer');
 
-        // ====================================================================
-        // NOTE: We're not using the hovers right now. Instead, we're trying to
-        // use label overlaps smartly. I keep it here in case it's useful as a
-        // reference in the future.
+      //   // ====================================================================
+      //   // NOTE: We're not using the hovers right now. Instead, we're trying to
+      //   // use label overlaps smartly. I keep it here in case it's useful as a
+      //   // reference in the future.
 
-        let hoveredStationId = null;
+      //   let hoveredStationId = null;
 
-        const unhoverStation = () => {
-          if (hoveredStationId) {
-            this.map.setFeatureState(
-              { source: 'existing-stations', id: hoveredStationId },
-              { hovered: false }
-            );
-            hoveredStationId = null;
-          }
-        };
+      //   const unhoverStation = () => {
+      //     if (hoveredStationId) {
+      //       this.stationsMap.setFeatureState(
+      //         { source: 'existing-stations', id: hoveredStationId },
+      //         { hovered: false }
+      //       );
+      //       hoveredStationId = null;
+      //     }
+      //   };
 
-        const hoverStation = (stationId) => {
-          if (hoveredStationId !== stationId) {
-            unhoverStation();
-            hoveredStationId = stationId;
-            this.map.setFeatureState(
-              { source: 'existing-stations', id: stationId },
-              { hovered: true }
-            );
-          }
-        };
+      //   const hoverStation = (stationId) => {
+      //     if (hoveredStationId !== stationId) {
+      //       unhoverStation();
+      //       hoveredStationId = stationId;
+      //       this.stationsMap.setFeatureState(
+      //         { source: 'existing-stations', id: stationId },
+      //         { hovered: true }
+      //       );
+      //     }
+      //   };
         
-        this.map.on('mouseenter', 'existing-stations-icon-layer', (e) => {
-          // Set the station feature state to hovered
-          if (e.features && e.features.length > 0) {
-            const stationId = e.features[0].id;
-            if (!stationId) {
-              console.warn('No station ID found in feature:', e.features[0].properties);
-              return;
-            }
-            hoverStation(stationId);
-          }
-        });
+      //   this.stationsMap.on('mouseenter', 'existing-stations-icon-layer', (e) => {
+      //     // Set the station feature state to hovered
+      //     if (e.features && e.features.length > 0) {
+      //       const stationId = e.features[0].id;
+      //       if (!stationId) {
+      //         console.warn('No station ID found in feature:', e.features[0].properties);
+      //         return;
+      //       }
+      //       hoverStation(stationId);
+      //     }
+      //   });
 
-        this.map.on('mouseleave', 'existing-stations-icon-layer', () => {
-          // Reset the station feature state on mouse leave
-          unhoverStation();
-        });
-      }
+      //   this.stationsMap.on('mouseleave', 'existing-stations-icon-layer', () => {
+      //     // Reset the station feature state on mouse leave
+      //     unhoverStation();
+      //   });
+      // }
     },
     makeStationSuggestionsLayer: function() {
-      if (!this.map.getSource('station-suggestions')) {
-        this.map.addSource('station-suggestions', {
+      if (!this.suggestionsMap.getSource('station-suggestions')) {
+        this.suggestionsMap.addSource('station-suggestions', {
           type: 'geojson',
           data: null,
         });
       }
 
-      if (!this.map.getLayer('station-suggestions-layer')) {
-        // this.map.addLayer({
+      if (!this.suggestionsMap.getLayer('station-suggestions-layer')) {
+        // this.suggestionsMap.addLayer({
         //   'id': 'station-suggestions-layer',
         //   'type': 'heatmap',
         //   'source': 'station-suggestions',
@@ -407,7 +425,7 @@ var Shareabouts = Shareabouts || {};
         //     'heatmap-radius': 10,
         //   },
         // }, 'proximity-layer');
-        this.map.addLayer(
+        this.suggestionsMap.addLayer(
           {
             'id': 'station-suggestions-layer',
             'type': 'fill',
@@ -419,8 +437,8 @@ var Shareabouts = Shareabouts || {};
             },
           },
 
-          // Add the layer directly under the proximity layer
-          'proximity-layer',
+          // // Add the layer directly under the proximity layer
+          // 'proximity-layer',
         );
       }
     },
@@ -460,15 +478,15 @@ var Shareabouts = Shareabouts || {};
       return proximityData;
     },
     makeProximityLayer: function() {
-      if (!this.map.getSource('proximity')) {
-        this.map.addSource('proximity', {
+      if (!this.stationsMap.getSource('proximity')) {
+        this.stationsMap.addSource('proximity', {
           type: 'geojson',
           data: null,
         });
       }
 
-      if (!this.map.getLayer('proximity-layer')) {
-        this.map.addLayer({
+      if (!this.stationsMap.getLayer('proximity-layer')) {
+        this.stationsMap.addLayer({
           'id': 'proximity-layer',
           'type': 'line',
           'source': 'proximity',
@@ -484,7 +502,7 @@ var Shareabouts = Shareabouts || {};
       }
     },
     updateProximitySource: function(ll) {
-      const proximitySource = this.map.getSource('proximity');
+      const proximitySource = this.stationsMap.getSource('proximity');
       if (!proximitySource) {
         console.warn('No proximity source found, cannot update proximity data.');
         return;
@@ -492,27 +510,27 @@ var Shareabouts = Shareabouts || {};
       proximitySource.setData(this.getProximityData(ll));
     },
     showProximityLayer: function(setToCenter = false) {
-      const hasProximityLayer = !!this.map.getLayer('proximity-layer');
+      const hasProximityLayer = !!this.stationsMap.getLayer('proximity-layer');
       if (!hasProximityLayer) {
         console.warn('No proximity layer found, cannot hide proximity layer.');
         return;
       }
 
       // If the layer is not visible, update the source too.
-      const isVisible = this.map.getLayoutProperty('proximity-layer', 'visibility') === 'visible';
+      const isVisible = this.stationsMap.getLayoutProperty('proximity-layer', 'visibility') === 'visible';
       if (setToCenter && !isVisible) {
-        const center = this.map.getCenter();
+        const center = this.stationsMap.getCenter();
         this.updateProximitySource(center);
       }
-      this.map.setLayoutProperty('proximity-layer', 'visibility', 'visible');
+      this.stationsMap.setLayoutProperty('proximity-layer', 'visibility', 'visible');
     },
     hideProximityLayer: function() {
-      const hasProximityLayer = !!this.map.getLayer('proximity-layer');
+      const hasProximityLayer = !!this.stationsMap.getLayer('proximity-layer');
       if (!hasProximityLayer) {
         console.warn('No proximity layer found, cannot hide proximity layer.');
         return;
       }
-      this.map.setLayoutProperty('proximity-layer', 'visibility', 'none');
+      this.stationsMap.setLayoutProperty('proximity-layer', 'visibility', 'none');
     },
     render: function() {
       // Clear any existing stuff on the map, and free any views in
@@ -530,8 +548,10 @@ var Shareabouts = Shareabouts || {};
       });
     },
     updateSize: function() {
-      // this.map.invalidateSize({ animate:true, pan:true });
-      this.map.resize();
+      // this.baseMap.invalidateSize({ animate:true, pan:true });
+      this.baseMap.resize();
+      this.suggestionsMap.resize();
+      this.stationsMap.resize();
     },
     initGeolocation: function() {
       var self = this;
@@ -574,8 +594,8 @@ var Shareabouts = Shareabouts || {};
       document.getElementById('geolocation-button').addEventListener('click', this.onClickGeolocate.bind(this));
 
       // Bind event handling
-      this.map.on('locationerror', onLocationError);
-      this.map.on('locationfound', onLocationFound);
+      this.baseMap.on('locationerror', onLocationError);
+      this.baseMap.on('locationfound', onLocationFound);
 
       // Go to the current location if specified
       if (this.options.mapConfig.geolocation_onload) {
@@ -583,10 +603,10 @@ var Shareabouts = Shareabouts || {};
       }
     },
     getCenter: function() {
-      return this.map.getCenter();
+      return this.baseMap.getCenter();
     },
     getZoom: function() {
-      return this.map.getZoom();
+      return this.baseMap.getZoom();
     },
     initGeocoding: function() {
       // var geocoder;
@@ -627,7 +647,7 @@ var Shareabouts = Shareabouts || {};
       //     this._map.setView(center, zoom);
       //     $(S).trigger('geocode', [evt]);
       //   })
-      //   .addTo(this.map);
+      //   .addTo(this.baseMap);
 
       // // Move the control to the center
       // $('<div class="leaflet-top leaflet-center"/>')
@@ -647,7 +667,7 @@ var Shareabouts = Shareabouts || {};
           lng: position.coords.longitude,
           lat: position.coords.latitude
         };
-        this.selectLocation(ll, this.map.getZoom());
+        this.selectLocation(ll, this.baseMap.getZoom());
       }, (error) => {
         console.error('Geolocation error:', error);
         alert('Could not determine your location. Please try again.');
@@ -657,7 +677,7 @@ var Shareabouts = Shareabouts || {};
       this.layerViews[model.cid] = new S.LayerView({
         model: model,
         router: this.options.router,
-        map: this.map,
+        map: this.baseMap,
         placeLayers: this.placeLayers,
         placeTypes: this.options.placeTypes,
         mapView: this
@@ -668,10 +688,10 @@ var Shareabouts = Shareabouts || {};
       delete this.layerViews[model.cid];
     },
     zoomInOn: function(latLng) {
-      this.map.setView(latLng, this.options.mapConfig.options.maxZoom || 17);
+      this.baseMap.setView(latLng, this.options.mapConfig.options.maxZoom || 17);
     },
     setView: function(lng, lat, zoom) {
-      const center = this.map.getCenter();
+      const center = this.baseMap.getCenter();
 
       // If the map is already centered on the point, within 5 decimal places of
       // tolerance, do nothing.
@@ -679,9 +699,9 @@ var Shareabouts = Shareabouts || {};
         return;
       }
 
-      this.map.easeTo({
+      this.baseMap.easeTo({
         center: [lng, lat],
-        zoom: zoom || this.map.getZoom()
+        zoom: zoom || this.baseMap.getZoom()
       });
     },
 
