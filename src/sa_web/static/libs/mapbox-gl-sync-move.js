@@ -5,15 +5,11 @@
 function moveToMapPosition (master, clones) {
   var center = master.getCenter();
   var zoom = master.getZoom();
-  var bearing = master.getBearing();
-  var pitch = master.getPitch();
 
   clones.forEach(function (clone) {
     clone.jumpTo({
       center: center,
       zoom: zoom,
-      bearing: bearing,
-      pitch: pitch
     });
   });
 }
@@ -27,23 +23,13 @@ function moveToMapPosition (master, clones) {
 // - could cause an infinite loop
 // - prematurely halts prolonged movements like
 //   double-click zooming, box-zooming, and flying
-function syncMaps () {
-  var maps;
-  var argLen = arguments.length;
-  if (argLen === 1) {
-    maps = arguments[0];
-  } else {
-    maps = [];
-    for (var i = 0; i < argLen; i++) {
-      maps.push(arguments[i]);
-    }
-  }
+function syncMaps (...maps) {
 
   // Create all the movement functions, because if they're created every time
   // they wouldn't be the same and couldn't be removed.
   var fns = [];
   maps.forEach(function (map, index) {
-    fns[index] = sync.bind(null, map, maps.filter(function (o, i) { return i !== index; }));
+    fns[index] = sync.bind(null, map, maps.filter(function (_, i) { return i !== index; }));
   });
 
   function on () {
