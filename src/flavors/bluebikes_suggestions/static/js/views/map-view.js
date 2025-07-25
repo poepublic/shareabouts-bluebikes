@@ -42,11 +42,12 @@ var Shareabouts = Shareabouts || {};
         ...overlayOptions,
       });
 
-      this.proximityMap = new mapboxgl.Map({
-        container: "proximity-overlay",
-        style: { "version": 8, "sources": {}, "layers": [], glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf" },
-        ...overlayOptions,
-      });
+      // this.proximityMap = new mapboxgl.Map({
+      //   container: "proximity-overlay",
+      //   style: { "version": 8, "sources": {}, "layers": [], glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf" },
+      //   ...overlayOptions,
+      // });
+      this.proximityMap = this.baseMap;
 
       // this.stationsMap = new mapboxgl.Map({
       //   container: "stations-overlay",
@@ -55,7 +56,7 @@ var Shareabouts = Shareabouts || {};
       // });
       this.stationsMap = this.baseMap;
 
-      syncMaps(this.baseMap, this.suggestionsMap, this.proximityMap/*, this.stationsMap*/);
+      syncMaps(this.baseMap, this.suggestionsMap/*, this.proximityMap, this.stationsMap*/);
 
       this.searchBox = document.getElementById('place-search-box');
       this.searchBox.bindMap(this.baseMap);
@@ -559,7 +560,7 @@ var Shareabouts = Shareabouts || {};
       // this.baseMap.invalidateSize({ animate:true, pan:true });
       this.baseMap.resize();
       this.suggestionsMap.resize();
-      this.proximityMap.resize();
+      // this.proximityMap.resize();
       // this.stationsMap.resize();
     },
     initGeolocation: function() {
