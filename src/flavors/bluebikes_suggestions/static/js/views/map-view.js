@@ -42,13 +42,20 @@ var Shareabouts = Shareabouts || {};
         ...overlayOptions,
       });
 
-      this.stationsMap = new mapboxgl.Map({
-        container: "stations-overlay",
+      this.proximityMap = new mapboxgl.Map({
+        container: "proximity-overlay",
         style: { "version": 8, "sources": {}, "layers": [], glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf" },
         ...overlayOptions,
       });
 
-      syncMaps(this.baseMap, this.suggestionsMap, this.stationsMap);
+      // this.stationsMap = new mapboxgl.Map({
+      //   container: "stations-overlay",
+      //   style: { "version": 8, "sources": {}, "layers": [], glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf" },
+      //   ...overlayOptions,
+      // });
+      this.stationsMap = this.baseMap;
+
+      syncMaps(this.baseMap, this.suggestionsMap, this.proximityMap/*, this.stationsMap*/);
 
       this.searchBox = document.getElementById('place-search-box');
       this.searchBox.bindMap(this.baseMap);
@@ -308,51 +315,51 @@ var Shareabouts = Shareabouts || {};
         });
       }
 
-      // if (!this.stationsMap.getLayer('existing-stations-icon-layer')) {
-      //   this.stationsMap.addLayer({
-      //     'id': 'existing-stations-icon-layer',
-      //     'type': 'symbol',
-      //     'source': 'existing-stations',
-      //     'minzoom': 12,
-      //     'layout': {
-      //       'icon-anchor': 'center',
-      //       'icon-image': 'bluebikes-station-icon',
-      //       'icon-size': ['interpolate',
-      //         ['linear'],
-      //         ['zoom'],
-      //         13, 0.125,
-      //         15, 0.25,
-      //       ],  // The image is 64x64, so this scales it 8x8 up to 16x16.
-      //       'icon-allow-overlap': true,
-      //       'text-field': ['get', 'name'],
-      //       'text-anchor': 'top',
-      //       'text-offset': [0, 0.5],
-      //       'text-optional': true,
-      //       'text-size': ['interpolate',
-      //         ['linear'],
-      //         ['zoom'],
-      //         12, 9,
-      //         18, 12,
-      //       ],
-      //     },
-      //     'paint': {
-      //       'text-color': '#0d4877',
-      //       'text-halo-color': '#ffffff',
-      //       'text-halo-width': 1,
-      //       'text-halo-blur': 1,
-      //       'text-opacity': ['interpolate',
-      //         ['linear'],
-      //         ['zoom'],
-      //         13, 0,
-      //         14, 1,
-      //       ],
-      //       // 'text-opacity': ['case',
-      //       //   ['boolean', ['feature-state', 'hovered'], false],
-      //       //   1,
-      //       //   0,
-      //       // ],
-      //     },
-      //   }, 'existing-stations-dot-layer');
+      if (!this.stationsMap.getLayer('existing-stations-icon-layer')) {
+        this.stationsMap.addLayer({
+          'id': 'existing-stations-icon-layer',
+          'type': 'symbol',
+          'source': 'existing-stations',
+          'minzoom': 12,
+          'layout': {
+            'icon-anchor': 'center',
+            'icon-image': 'bluebikes-station-icon',
+            'icon-size': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              13, 0.125,
+              15, 0.25,
+            ],  // The image is 64x64, so this scales it 8x8 up to 16x16.
+            'icon-allow-overlap': true,
+            'text-field': ['get', 'name'],
+            'text-anchor': 'top',
+            'text-offset': [0, 0.5],
+            'text-optional': true,
+            'text-size': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              12, 9,
+              18, 12,
+            ],
+          },
+          'paint': {
+            'text-color': '#0d4877',
+            'text-halo-color': '#ffffff',
+            'text-halo-width': 1,
+            'text-halo-blur': 1,
+            'text-opacity': ['interpolate',
+              ['linear'],
+              ['zoom'],
+              13, 0,
+              14, 1,
+            ],
+            // 'text-opacity': ['case',
+            //   ['boolean', ['feature-state', 'hovered'], false],
+            //   1,
+            //   0,
+            // ],
+          },
+        }, 'existing-stations-dot-layer');
 
       //   // ====================================================================
       //   // NOTE: We're not using the hovers right now. Instead, we're trying to
@@ -398,7 +405,7 @@ var Shareabouts = Shareabouts || {};
       //     // Reset the station feature state on mouse leave
       //     unhoverStation();
       //   });
-      // }
+      }
     },
     makeStationSuggestionsLayer: function() {
       if (!this.suggestionsMap.getSource('station-suggestions')) {
@@ -478,15 +485,15 @@ var Shareabouts = Shareabouts || {};
       return proximityData;
     },
     makeProximityLayer: function() {
-      if (!this.stationsMap.getSource('proximity')) {
-        this.stationsMap.addSource('proximity', {
+      if (!this.proximityMap.getSource('proximity')) {
+        this.proximityMap.addSource('proximity', {
           type: 'geojson',
           data: null,
         });
       }
 
-      if (!this.stationsMap.getLayer('proximity-layer')) {
-        this.stationsMap.addLayer({
+      if (!this.proximityMap.getLayer('proximity-layer')) {
+        this.proximityMap.addLayer({
           'id': 'proximity-layer',
           'type': 'line',
           'source': 'proximity',
@@ -502,7 +509,7 @@ var Shareabouts = Shareabouts || {};
       }
     },
     updateProximitySource: function(ll) {
-      const proximitySource = this.stationsMap.getSource('proximity');
+      const proximitySource = this.proximityMap.getSource('proximity');
       if (!proximitySource) {
         console.warn('No proximity source found, cannot update proximity data.');
         return;
@@ -510,27 +517,27 @@ var Shareabouts = Shareabouts || {};
       proximitySource.setData(this.getProximityData(ll));
     },
     showProximityLayer: function(setToCenter = false) {
-      const hasProximityLayer = !!this.stationsMap.getLayer('proximity-layer');
+      const hasProximityLayer = !!this.proximityMap.getLayer('proximity-layer');
       if (!hasProximityLayer) {
         console.warn('No proximity layer found, cannot hide proximity layer.');
         return;
       }
 
       // If the layer is not visible, update the source too.
-      const isVisible = this.stationsMap.getLayoutProperty('proximity-layer', 'visibility') === 'visible';
+      const isVisible = this.proximityMap.getLayoutProperty('proximity-layer', 'visibility') === 'visible';
       if (setToCenter && !isVisible) {
-        const center = this.stationsMap.getCenter();
+        const center = this.proximityMap.getCenter();
         this.updateProximitySource(center);
       }
-      this.stationsMap.setLayoutProperty('proximity-layer', 'visibility', 'visible');
+      this.proximityMap.setLayoutProperty('proximity-layer', 'visibility', 'visible');
     },
     hideProximityLayer: function() {
-      const hasProximityLayer = !!this.stationsMap.getLayer('proximity-layer');
+      const hasProximityLayer = !!this.proximityMap.getLayer('proximity-layer');
       if (!hasProximityLayer) {
         console.warn('No proximity layer found, cannot hide proximity layer.');
         return;
       }
-      this.stationsMap.setLayoutProperty('proximity-layer', 'visibility', 'none');
+      this.proximityMap.setLayoutProperty('proximity-layer', 'visibility', 'none');
     },
     render: function() {
       // Clear any existing stuff on the map, and free any views in
@@ -551,7 +558,8 @@ var Shareabouts = Shareabouts || {};
       // this.baseMap.invalidateSize({ animate:true, pan:true });
       this.baseMap.resize();
       this.suggestionsMap.resize();
-      this.stationsMap.resize();
+      this.proximityMap.resize();
+      // this.stationsMap.resize();
     },
     initGeolocation: function() {
       var self = this;
