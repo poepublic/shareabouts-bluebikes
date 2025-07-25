@@ -99,6 +99,7 @@ var Shareabouts = Shareabouts || {};
 
       // Map interaction events
       this.baseMap.on('click', this.handleLocationSelect.bind(this));
+      this.baseMap.on('dblclick', (evt) => { clearTimeout(this.singleClickTimeout) });
       this.baseMap.on('mousedown', (evt) => { clearTimeout(this.singleClickTimeout) });
       this.baseMap.on('touchstart', (evt) => { clearTimeout(this.singleClickTimeout) });
 
