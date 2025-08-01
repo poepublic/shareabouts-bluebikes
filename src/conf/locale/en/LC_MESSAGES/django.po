@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-29 16:46-0400\n"
+"POT-Creation-Date: 2025-07-25 19:32-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,399 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: jstemplates/activity-list-item.html:1
+#: src/flavors/bluebikes_suggestions/_config.translations.py:6
+msgid ""
+"Suggest new Bluebikes station locations across the Boston Metro Area. Share "
+"your ideas with the community and help improve the Bluebikes network."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:7
+msgid "Enter an address..."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:8
+msgid "Suggestion"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:9
+msgid "suggestion"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:10
+msgid "suggestions"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:11
+msgid "Suggest a station location"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:12
+msgid "List All Suggestions"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:13
+msgid "Show the Map"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:14
+msgid "submitted"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:15
+msgid "Bikeshare Suggestions"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:16
+msgid ""
+"Suggestions do not guarantee a station; rather, suggestions are helpful "
+"feedback to augment existing processes that determine where and when new "
+"stations are added or expanded."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:17
+msgid "Someone"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:18
+msgid "Submit"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:19
+msgid "Location Type"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:20
+msgid "Which jurisdiction does the suggestion fall under?"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:21
+msgid "Malden"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:22
+msgid "Salem"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:23
+msgid "Revere"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:24
+msgid "Chelsea"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:25
+msgid "Somerville"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:26
+msgid "Arlington"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:27
+msgid "Newton"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:28
+msgid "Cambridge"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:29
+msgid "Boston"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:30
+msgid "Watertown"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:31
+msgid "Medford"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:32
+msgid "Brookline"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:33
+msgid "Everett"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:34
+msgid "This is a good location because it is..."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:35
+msgid "Please select at least one reason why this is a good location."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:36
+msgid "Close to work/school"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:37
+msgid "Close to home/family/friends"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:38
+msgid "Close to rail, T, or bus station"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:39
+#, fuzzy
+#| msgid "Close Button"
+msgid "Close to errands"
+msgstr "Close"
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:40
+msgid "Close to leisure activities"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:41
+#: src/flavors/bluebikes_suggestions/_config.translations.py:47
+msgid "Something else"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:42
+msgid "Please let us know why this would be a good station location."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:43
+msgid ""
+"Seems like there's already a station nearby; why would an additional or "
+"bigger station here be useful?"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:44
+msgid ""
+"Please select at least one reason why you think another station is needed."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:45
+msgid "The existing station is often too full/empty"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:46
+msgid "A new/different location would improve accessibility"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:48
+msgid "Please let us know why another station is needed."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:49
+msgid "About this map"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:50
+msgid "How it works"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:51
+msgid "Pricing"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:52
+msgid "System map"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:53
+msgid "Explore Metro Boston"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:54
+msgid "Income Eligible"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/_config.translations.py:55
+msgid "Help"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:1
+msgid ""
+"<span class=\"suggestion-count\">No one</span> has suggested adding a "
+"station within about a block of here yet."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:2
+msgid ""
+"<span class=\"suggestion-count\">One other person</span> has suggested "
+"adding a station within about a block of here."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:3
+msgid ""
+"<span class=\"suggestion-count\">You and one other person</span> have "
+"suggested adding a station within about a block of here."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:4
+msgid ""
+"<span class=\"suggestion-count\">You and {{othersSuggestionCount}} other "
+"people</span> have suggested adding a station within about a block of here."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:5
+msgid ""
+"<span class=\"suggestion-count\">You</span> have suggested adding a station "
+"within about a block of here."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:6
+msgid ""
+"<span class=\"suggestion-count\">{{othersSuggestionCount}} other people</"
+"span> have suggested adding a station within about a block of here."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:7
+msgid ""
+"Near <span class=\"reverse-geocoded-location\">{{addressOrPlace}}</span>"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:8
+msgid "Thank you for your suggestion!"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:9
+msgid ""
+"The closest bikeshare station is <span class=\"station-"
+"name\">{{closestStationName}}</span> about <span class=\"station-"
+"distance\">{{closestStationReadableDistance}} away</span>."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:10
+msgid "Want more stations here too?"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:11
+msgid "Want more stations here?"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:1
+msgid ""
+"Bluebikes is a great way to explore the Boston metro area. Share your\n"
+"local expertise and let us know where you think we should add or expand "
+"stations\n"
+"to the Bluebikes system. Existing stations are identified with a blue\n"
+"marker."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:5
+msgid "Click the map to get started!"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:6
+msgid ""
+"For durability and easy maintenance, we prefer level hardscape (concrete, "
+"brick, or asphalt) in public spaces with at least 4 hours of direct sunlight "
+"daily. If hardscape is unavailable, our team can install concrete pads."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:7
+msgid "Most of our stations are 42–52’ long and 6’ wide."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:8
+msgid ""
+"Please identify any utility covers or maintenance holes, as stations cannot "
+"be installed over them."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:9
+msgid "Site Notes:"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:10
+msgid ""
+"Sites on federal or private property require approval from the government or "
+"property owner and may need additional permissions"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:11
+msgid "Station Suggestions"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:12
+msgid ""
+"Stations can also be placed on low-traffic, low-speed streets, ideally next "
+"to bike lanes."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/place-form.html:1
+msgid "Click the map to set your location."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/place-form.html:2
+msgid ""
+"It looks like you didn't set your location yet. Please click the map to set "
+"your location."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/base.html:58
+#: src/sa_web/templates/base.html:81
+#, python-format
+msgid ""
+"\n"
+"        Oops, %(config.app.name)s needs JavaScript to work properly.\n"
+"        "
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/base.html:63
+#: src/sa_web/templates/base.html:86
+#, python-format
+msgid ""
+"\n"
+"        %(config.app.name)s is great but it needs something called "
+"JavaScript to work\n"
+"        properly. But fear not, it's really easy to turn on. Click\n"
+"        <a href=\"http://enable-javascript.com/\" target=\"_blank\">here</a> "
+"for simple instructions!\n"
+"        "
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/base.html:83
+#: src/sa_web/templates/base.html:100
+msgid ""
+"We can't connect to the server at the moment. Hang tight while we re-"
+"establish communication."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/base.html:92
+#: src/flavors/bluebikes_suggestions/templates/base.html:189
+#: src/flavors/bluebikes_suggestions/templates/base.html:194
+#: src/sa_web/templates/base.html:106
+msgid "Close"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/base.html:190
+msgid ""
+"Thank you for submitting a station suggestion! Your feedback has been shared "
+"with the municipal owners of the Bluebikes system and will be taken into "
+"consideration for future station planning."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/base.html:195
+msgid ""
+"The location you've chosen is outside of the current Bluebikes service area. "
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/templates/index.html:53
+#: src/flavors/defaultflavor/templates/index.html:52
+msgid "Powered by"
+msgstr ""
+
+#: src/sa_web/jstemplates/activity-list-item.html:1
 msgid ""
 "<strong>\n"
 "\n"
 "        {{#if target.submitter}}\n"
-"          <img src=\"{{ target.submitter.avatar_url }}\" class=\"avatar\" /> "
-"{{ target.submitter.name }}\n"
+"          <img src=\"{{ target.submitter.avatar_url }}\" "
+"role=\"presentation\" alt=\"\" class=\"avatar\" /> {{ target.submitter."
+"name }}\n"
 "        {{^}}\n"
 "          <!-- TODO: FIXME: don't hardcode image URL -->\n"
-"          <img src=\"/static/css/images/user-50.png\" class=\"avatar\" /> "
-"{{ target.submitter_name }}\n"
+"          <img src=\"{{ STATIC_URL }}css/images/user-50.png\" "
+"role=\"presentation\" alt=\"\" class=\"avatar\" /> {{ target."
+"submitter_name }}\n"
 "        {{/if}}\n"
 "        </strong>\n"
 "\n"
@@ -38,8 +420,8 @@ msgid ""
 "            named <span class=\"place-name\">{{ place.name }}</span>\n"
 "          {{^}}\n"
 "            {{#if place.location }}\n"
-"              at <span class=\"place-name\">{{>location-string place."
-"location }}</span>\n"
+"              at <span class=\"place-name\">{{>location-string place}}</"
+"span>\n"
 "            {{/if }}\n"
 "          {{/if }}\n"
 "        {{else}}\n"
@@ -56,61 +438,53 @@ msgid ""
 "        "
 msgstr ""
 
-#: jstemplates/auth-nav.html:1 jstemplates/place-form.html:3
+#: src/sa_web/jstemplates/auth-nav.html:1
 msgid "Log Out"
 msgstr ""
 
-#: jstemplates/auth-nav.html:2
+#: src/sa_web/jstemplates/auth-nav.html:2
 msgid "Sign In"
 msgstr ""
 
-#: jstemplates/auth-nav.html:3
+#: src/sa_web/jstemplates/auth-nav.html:3
+msgid "Signed in as</span> <span class=\"current-user\">{{ this }}"
+msgstr ""
+
+#: src/sa_web/jstemplates/form-field-file.html:1
+msgid "Sorry, your browser doesn't support file uploads."
+msgstr ""
+
+#: src/sa_web/jstemplates/form-field-input.html:1
 msgid ""
-"Signed in as</span> <span class=\"current-user\">{{ current_user \"name\" }}"
+"Or sign in with <a class=\"auth-inline twitter-btn\" href=\"/users/login/"
+"twitter/\">Twitter</a> <a class=\"auth-inline facebook-btn\" href=\"/users/"
+"login/facebook/\">Facebook</a>"
 msgstr ""
 
-#: jstemplates/geocode-address.html:1
-msgid "Search"
-msgstr ""
-
-#: jstemplates/place-detail-promotion-bar.html:1
-msgid "Recommend on Facebook"
-msgstr ""
-
-#: jstemplates/place-detail-promotion-bar.html:2
-msgid "Tweet This"
-msgstr ""
-
-#: jstemplates/place-detail-survey.html:1
-msgid ""
-"<strong class=\"response-submitter\">\n"
-"                    {{#if submitter}}\n"
-"                      <img src=\"{{ submitter.avatar_url }}\" class=\"avatar"
-"\" /> {{ submitter.name }}\n"
-"                    {{^}}\n"
-"                      <!-- TODO: FIXME: don't hardcode image URL -->\n"
-"                      <img src=\"/static/css/images/user-50.png\" class="
-"\"avatar\" /> {{ submitter_name }}\n"
-"                    {{/if}}\n"
-"                  </strong>\n"
-"                  <span class=\"response-date\">\n"
-"                    around {{ pretty_created_datetime }}\n"
-"                  </span>\n"
-"                  "
-msgstr ""
-
-#: jstemplates/place-detail-survey.html:13 jstemplates/place-form.html:6
+#: src/sa_web/jstemplates/form-field-label.html:1
 msgid "optional"
 msgstr ""
 
-#: jstemplates/place-detail.html:1
+#: src/sa_web/jstemplates/place-detail-promotion-bar.html:1
+msgid "Recommend on Facebook"
+msgstr ""
+
+#: src/sa_web/jstemplates/place-detail-promotion-bar.html:2
+msgid "Tweet This"
+msgstr ""
+
+#: src/sa_web/jstemplates/place-detail-survey.html:1
+msgid "around {{ pretty_created_datetime }}"
+msgstr ""
+
+#: src/sa_web/jstemplates/place-detail.html:1
 msgid ""
 "<strong class=\"point-submitter\">\n"
 "              {{#if submitter.avatar_url }}\n"
 "                <img src=\"{{ submitter.avatar_url }}\" class=\"avatar\" />\n"
 "              {{^}}\n"
-"                <img src=\"{{ STATIC_URL }}/css/images/user-50.png\" class="
-"\"avatar\" />\n"
+"                <img src=\"{{ STATIC_URL }}css/images/user-50.png\" "
+"class=\"avatar\" />\n"
 "              {{/if}}\n"
 "              {{#if submitter.name }}\n"
 "                {{ submitter.name }}\n"
@@ -129,67 +503,46 @@ msgid ""
 "            {{/if}}"
 msgstr ""
 
-#: jstemplates/place-form.html:1
-msgid "Drag the map to your location."
+#: src/sa_web/jstemplates/place-detail.html:21
+msgid "View On Map"
 msgstr ""
 
-#: jstemplates/place-form.html:2
-msgid ""
-"It looks like you didn't set your location yet. Please drag the map to your "
-"location."
-msgstr ""
-
-#: jstemplates/place-form.html:4
-msgid ""
-"Or sign in with <a class=\"auth-inline twitter-btn\" href=\"/users/login/"
-"twitter/\">Twitter</a> <a class=\"auth-inline facebook-btn\" href=\"/users/"
-"login/facebook/\">Facebook</a>"
-msgstr ""
-
-#: jstemplates/place-form.html:5
-msgid "Sorry, your browser doesn't support file uploads."
-msgstr ""
-
-#: jstemplates/place-list.html:1
+#: src/sa_web/jstemplates/place-list.html:1
 msgid "Most Recent"
 msgstr ""
 
-#: jstemplates/place-list.html:2
+#: src/sa_web/jstemplates/place-list.html:2
 msgid "Most {{ support_label_plural }}"
 msgstr ""
 
-#: jstemplates/place-list.html:3
+#: src/sa_web/jstemplates/place-list.html:3
 msgid "Most {{ survey_label_plural }}"
 msgstr ""
 
-#: templates/base.html:104
-#, python-format
+#: src/sa_web/jstemplates/place-moderation-bar.html:1
 msgid ""
-"\n"
-"        Oops, %(config.app.name)s needs JavaScript to work properly.\n"
-"        "
+"<span class=\"visibility-icon invisible-icon\">👁</span>\n"
+"      This {{ place_config.response_name }} is <strong>only visible to "
+"moderators</strong>."
 msgstr ""
 
-#: templates/base.html:109
-#, python-format
+#: src/sa_web/jstemplates/place-moderation-bar.html:3
 msgid ""
-"\n"
-"        %(config.app.name)s is great but it needs something called "
-"JavaScript to work\n"
-"        properly. But fear not, it's really easy to turn on. Click\n"
-"        <a href=\"http://enable-javascript.com/\" target=\"_blank\">here</a> "
-"for simple instructions!\n"
-"        "
+"<span class=\"visibility-icon visible-icon\">👁</span>\n"
+"      This {{ place_config.response_name }} is <strong>visible to everyone</"
+"strong>."
 msgstr ""
 
-#: templates/base.html:123
-msgid ""
-"We can't connect to the server at the moment. Hang tight while we re-"
-"establish communication."
+#: src/sa_web/jstemplates/place-moderation-bar.html:5
+msgid "Make {{ place_config.response_name }} hidden"
 msgstr ""
 
-#: templates/base.html:129
-msgid "Close"
+#: src/sa_web/jstemplates/place-moderation-bar.html:6
+msgid "Make {{ place_config.response_name }} visible"
+msgstr ""
+
+#: src/sa_web/jstemplates/place-survey-response.html:1
+msgid "Thanks for participating!"
 msgstr ""
 
 #~ msgid ""
@@ -210,6 +563,3 @@ msgstr ""
 #~ "    href=\"http://upgradeyourbrowser.net/\" target=\"_blank\">these</a> "
 #~ "instead.\n"
 #~ "    "
-
-#~ msgid "Close Button"
-#~ msgstr "Close"
