@@ -229,7 +229,7 @@ var Shareabouts = Shareabouts || {};
       console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
     }, 500),
     updateExistingStations: function() {
-      const existingStationsSource = this.baseMap.getSource('existing-stations');
+      const existingStationsSource = this.stationsMap.getSource('existing-stations');
       if (!existingStationsSource) {
         console.warn('No existing stations source found, cannot update existing stations.');
         return;
