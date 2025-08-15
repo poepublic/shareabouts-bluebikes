@@ -2,31 +2,96 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="96"
-   height="64"
-   viewBox="0 0 25.399999 16.933333"
+   width="99.628349"
+   height="67.628349"
+   viewBox="0 0 26.36 17.893334"
    version="1.1"
    id="svg5"
+   sodipodi:docname="suggestions-legend-symbol.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview138"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     showguides="false"
+     inkscape:zoom="11.052083"
+     inkscape:cx="49.583412"
+     inkscape:cy="33.839774"
+     inkscape:window-width="1704"
+     inkscape:window-height="996"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5" />
   <defs
-     id="defs2" />
+     id="defs2">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter394"
+       x="-0.028346459"
+       y="-0.028346459"
+       width="1.0566929"
+       height="1.0566929">
+      <feGaussianBlur
+         stdDeviation="0.2 0.2"
+         result="blur"
+         id="feGaussianBlur392" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter398"
+       x="-0.028346459"
+       y="-0.028346459"
+       width="1.0566929"
+       height="1.0566929">
+      <feGaussianBlur
+         stdDeviation="0.2 0.2"
+         result="blur"
+         id="feGaussianBlur396" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter402"
+       x="-0.028346459"
+       y="-0.028346459"
+       width="1.0566929"
+       height="1.0566929">
+      <feGaussianBlur
+         stdDeviation="0.2 0.2"
+         result="blur"
+         id="feGaussianBlur400" />
+    </filter>
+  </defs>
   <g
-     id="layer1">
+     id="layer1"
+     transform="translate(0.48,0.48)">
     <circle
-       style="fill:#e16a2c;stroke-width:0.529167;stroke:none;fill-opacity:0.1254902"
+       style="fill:#e16a2c;fill-opacity:0.12549;stroke:none;stroke-width:0.529167;filter:url(#filter402)"
        id="path234"
        cx="8.4666662"
        cy="8.4666662"
        r="8.4666662" />
     <circle
-       style="fill:#e16a2c;fill-opacity:0.50196081;stroke:none;stroke-width:0.529167"
+       style="fill:#e16a2c;fill-opacity:0.501961;stroke:none;stroke-width:0.529167;filter:url(#filter398)"
        id="circle900"
        cx="12.7"
        cy="8.4666662"
        r="8.4666662" />
     <circle
-       style="fill:#e16a2c;fill-opacity:0.81568629;stroke:none;stroke-width:0.529167"
+       style="fill:#e16a2c;fill-opacity:0.815686;stroke:none;stroke-width:0.529167;filter:url(#filter394)"
        id="circle904"
        cx="16.933332"
        cy="8.4666662"

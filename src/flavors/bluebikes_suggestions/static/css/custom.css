@@ -317,7 +317,7 @@ a.close-btn span {
 
 .map-legend li {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5em;
 }
 
@@ -337,10 +337,11 @@ a.close-btn span {
   width: 3em;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: 100% 50%;
+  background-position: 50% 50%;
 }
 
 .map-legend .existing-station .symbol {
+  height: 1em;
   background-image: url(../img/bluebikes-station-icon.png);
 }
 
