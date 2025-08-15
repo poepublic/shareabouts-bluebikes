@@ -112,7 +112,7 @@ place:
   show_map_button_label: _(Show the Map)
   action_text: _(submitted)
   title: _(Bikeshare Suggestions)
-  help_text: _(Suggestions do not guarantee a station; rather, suggestions are helpful feedback to augment existing processes that determine where and when new stations are added or expanded.)
+  help_text: _(Suggestions do not guarantee a station.)
   anonymous_name: _(Someone)
   submit_button_label: _(Submit)
 
