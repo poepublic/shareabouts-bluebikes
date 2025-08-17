@@ -141,14 +141,10 @@ msgid "Please select at least one reason why this is a good location."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:36
-#, fuzzy
-#| msgid "Close Button"
 msgid "Close to my home"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:37
-#, fuzzy
-#| msgid "Close Button"
 msgid "Close to my destination"
 msgstr ""
 
