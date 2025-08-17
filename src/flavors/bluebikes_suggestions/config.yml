@@ -159,65 +159,47 @@ place:
       required: true
       attrs:
         - key: data-group-required
-        - key: data-has-children
         - key: data-custom-validity
           value: _(Please select at least one reason why this is a good location.)
       options:
-        - label: _(Close to work/school)
-          value: work_or_school
-          color: '#a6cee3'
-        - label: _(Close to home/family/friends)
+        - label: _(Close to my home)
           value: home
           color: '#1f78b4'
-        - label: _(Close to rail, T, or bus station)
+        - label: _(Close to my destination)
+          value: destination
+          color: '#a6cee3'
+        - label: _(Close to a transit connection (rail, T, ferry, bus, etc.))
           value: transit
           color: '#b2df8a'
-        - label: _(Close to errands)
-          value: errands
-          color: '#33a02c'
-        - label: _(Close to leisure activities)
-          value: leisure
-          color: '#fb9a99'
         - label: _(Something else)
           value: other
           color: '#e31a1c'
-    - prompt: _(Please let us know why this would be a good station location.)
+    - prompt: _(Tell us more.)
       type: text
-      name: good_location_other_reason
-      required: true
-      attrs:
-        - key: required
-        - key: data-parent-field
-          value: good_location_reasons
-        - key: data-parent-value
-          value: other
+      name: good_location_more_info
+      optional: true
     - prompt: _(Seems like there's already a station nearby; why would an additional or bigger station here be useful?)
       type: checkboxgroup
       name: another_station_reasons
       required: true
       attrs:
         - key: data-group-required
-        - key: data-has-children
         - key: data-custom-validity
           value: _(Please select at least one reason why you think another station is needed.)
         - key: data-show-when-close-to-station
       options:
         - label: _(The existing station is often too full/empty)
           value: capacity
-        - label: _(A new/different location would improve accessibility)
+        - label: _(A new/different location would improve accessibility or connectivity)
           value: accessibility
         - label: _(Something else)
           value: other
-    - prompt: _(Please let us know why another station is needed.)
+    - prompt: _(Tell us more.)
       type: text
-      name: another_station_other_reason
-      required: true
+      name: another_station_more_info
+      optional: true
       attrs:
-        - key: required
-        - key: data-parent-field
-          value: another_station_reasons
-        - key: data-parent-value
-          value: other
+        - key: data-show-when-close-to-station
 
 pages:
   - title: _(About this map)

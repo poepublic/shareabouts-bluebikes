@@ -288,13 +288,31 @@ var Shareabouts = Shareabouts || {};
 
           this.$('.suggestion-reasons-chart').html(this.chart.element);
 
+          const shortFormLabelCache = new Map();
+          function shortFormLabel(label) {
+            // The transit label is pretty long with the parenthetical that
+            // details the types of transit. I don't think the detail is
+            // necessary for chart display, so just trim off everything after
+            // the first parenthesis. If there is no parenthetical, just return
+            // the full value.
+            const cached = shortFormLabelCache.get(label);
+            if (cached) {
+              return cached;
+            }
+
+            const match = label.match(/^(.*?)(\s*\(.*\))?$/);
+            const result = match ? match[1] : label;
+            shortFormLabelCache.set(label, result);
+            return result;
+          }
+
           // Update the chart with the new data
-          const columnsInNewData = new Set(data.suggestionReasons.map(reason => reason.label));
+          const columnsInNewData = new Set(data.suggestionReasons.map(reason => shortFormLabel(reason.label)));
           const columnsToUnload = this.chart.data().filter(d => !columnsInNewData.has(d.id)).map(d => d.id);
           this.chart.load({
             unload: columnsToUnload,
-            columns: data.suggestionReasons.map(reason => [reason.label, reason.percentage]),
-            colors: data.suggestionReasons.reduce((acc, reason) => ({...acc, [reason.label]: reason.color}), {}),
+            columns: data.suggestionReasons.map(reason => [shortFormLabel(reason.label), reason.percentage]),
+            colors: data.suggestionReasons.reduce((acc, reason) => ({...acc, [shortFormLabel(reason.label)]: reason.color}), {}),
           });
         }
       }
