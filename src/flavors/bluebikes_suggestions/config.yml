@@ -206,33 +206,15 @@ pages:
     slug: about
     name: overview
     start_page: true
-  
-  - title: _(How it works)
-    external: true
-    url: https://bluebikes.com/how-it-works
-  
-  - title: _(Pricing)
-    external: true
-    url: https://bluebikes.com/pricing
-  
-  - title: _(System map)
-    external: true
-    url: https://account.bluebikes.com/map
-  
-  - title: _(Explore Metro Boston)
-    external: true
-    url: https://bluebikes.com/explore-metro-boston
 
-  - title: _(Income Eligible)
-    external: true
-    url: https://bluebikes.com/pricing/income-eligible-program
-  
-  - title: _(Help)
-    external: true
-    url: https://help.bluebikes.com/hc/en-us
-
-
-
+languages:
+  # English
+  - code: 'en'
+    label: 'English'
+  # Spanish
+  - code: 'es'
+    label: 'Español'
+    
 notifications:
   on_new_place: true
   submitter_email_field: private-submitter_email

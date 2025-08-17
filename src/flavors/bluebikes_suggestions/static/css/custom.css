@@ -49,6 +49,7 @@ body {
   border-color: var(--input-blurred-border-color);
   border-width: var(--input-border-width);
   border-style: solid;
+  font-family: "DM Sans", sans-serif;
   text-shadow: none;
   text-transform: none;
 }
@@ -93,16 +94,24 @@ body {
 
 .access.is-exposed {
   position: absolute;
-  top: -0.5rem;
-  padding-top: 3.5rem;
   background-color: var(--bb-light-gray);
+  box-sizing: border-box;
 }
 
+#pages-nav-container .access.is-exposed {
+  top: -0.5rem;
+  padding-top: 3.5rem;
+}
+
+#language-picker .access.is-exposed {
+  top: 6rem;
+}
 .access.is-exposed .menu-item .btn {
   border-radius: 0;
   border-width: 1px 0;
   border-color: var(--divider-color);
   box-shadow: none;
+  height: 2.5rem;
 }
 
 @media screen and (width >= 60em) {
@@ -136,7 +145,11 @@ body {
     float: none;
     margin: 0;
     height: 100%;
-  }  
+  } 
+
+  .access li:hover > ul, .access li:hover > form > ul {
+    height: auto;
+  }
 
   .menu-item .btn {
     display: flex;
