@@ -106,6 +106,53 @@ body {
 #language-picker .access.is-exposed {
   top: 6rem;
 }
+
+.current-language {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-carousel {
+  position: relative;
+  display: inline-block;
+  width: 7em;
+}
+
+.language-carousel::after {
+  position: absolute;
+  top: -10%;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  content: '...';
+}
+
+/* Cycle through each language item, showing it for two seconds, and then fading to the next one */
+@keyframes fadeBetweenLanguages {
+  0%, 10% { opacity: 0; }
+  10%, 50% { opacity: 1; }
+  50%, 60% { opacity: 1; }
+  60%, 100% { opacity: 0; }
+}
+
+.language-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  animation: fadeBetweenLanguages 6s linear infinite 0s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-item:nth-child(1) { animation-delay: 0s; }
+.language-item:nth-child(2) { animation-delay: 3s; }
+
 .access.is-exposed .menu-item .btn {
   border-radius: 0;
   border-width: 1px 0;
@@ -138,6 +185,7 @@ body {
   .menu {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     height: 100%;
   }
 
@@ -149,6 +197,19 @@ body {
 
   .access li:hover > ul, .access li:hover > form > ul {
     height: auto;
+    width: 10rem;
+  }
+
+  .language-carousel::after {
+    content: '⌄';
+  }
+
+  #pages-nav-container {
+    flex-grow: 1;
+  }
+
+  #pages-nav-container .access {
+    width: 100%;
   }
 
   .menu-item .btn {
