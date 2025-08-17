@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shareabouts Philly Bike Share\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 19:32-0500\n"
+"POT-Creation-Date: 2025-08-17 16:46-0500\n"
 "PO-Revision-Date: 2014-09-09 22:58+0000\n"
 "Last-Translator: Frank Hebbert <frank@openplans.org>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/"
@@ -61,10 +61,7 @@ msgid "Bikeshare Suggestions"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:16
-msgid ""
-"Suggestions do not guarantee a station; rather, suggestions are helpful "
-"feedback to augment existing processes that determine where and when new "
-"stations are added or expanded."
+msgid "Suggestions do not guarantee a station."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:17
@@ -144,85 +141,52 @@ msgid "Please select at least one reason why this is a good location."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:36
-msgid "Close to work/school"
+#, fuzzy
+#| msgid "Close Button"
+msgid "Close to my home"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:37
-msgid "Close to home/family/friends"
+#, fuzzy
+#| msgid "Close Button"
+msgid "Close to my destination"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:38
-msgid "Close to rail, T, or bus station"
+msgid "Close to a transit connection (rail, T, ferry, bus, etc.)"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:39
-#, fuzzy
-#| msgid "Close Button"
-msgid "Close to errands"
-msgstr "Close"
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:40
-msgid "Close to leisure activities"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:41
-#: src/flavors/bluebikes_suggestions/_config.translations.py:47
+#: src/flavors/bluebikes_suggestions/_config.translations.py:45
 msgid "Something else"
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/_config.translations.py:42
-msgid "Please let us know why this would be a good station location."
+#: src/flavors/bluebikes_suggestions/_config.translations.py:40
+#: src/flavors/bluebikes_suggestions/_config.translations.py:46
+msgid "Tell us more."
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/_config.translations.py:43
+#: src/flavors/bluebikes_suggestions/_config.translations.py:41
 msgid ""
 "Seems like there's already a station nearby; why would an additional or "
 "bigger station here be useful?"
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/_config.translations.py:44
+#: src/flavors/bluebikes_suggestions/_config.translations.py:42
 msgid ""
 "Please select at least one reason why you think another station is needed."
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/_config.translations.py:45
+#: src/flavors/bluebikes_suggestions/_config.translations.py:43
 msgid "The existing station is often too full/empty"
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/_config.translations.py:46
-msgid "A new/different location would improve accessibility"
+#: src/flavors/bluebikes_suggestions/_config.translations.py:44
+msgid "A new/different location would improve accessibility or connectivity"
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/_config.translations.py:48
-msgid "Please let us know why another station is needed."
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:49
+#: src/flavors/bluebikes_suggestions/_config.translations.py:47
 msgid "About this map"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:50
-msgid "How it works"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:51
-msgid "Pricing"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:52
-msgid "System map"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:53
-msgid "Explore Metro Boston"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:54
-msgid "Income Eligible"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/_config.translations.py:55
-msgid "Help"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:1
@@ -262,27 +226,53 @@ msgid ""
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:7
-msgid ""
-"Near <span class=\"reverse-geocoded-location\">{{addressOrPlace}}</span>"
+msgid "Do you want to see a station here, too?"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:8
-msgid "Thank you for your suggestion!"
+msgid "Do you want to see a station here?"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:9
 msgid ""
-"The closest bikeshare station is <span class=\"station-"
-"name\">{{closestStationName}}</span> about <span class=\"station-"
-"distance\">{{closestStationReadableDistance}} away</span>."
+"Near <span class=\"reverse-geocoded-location\">{{addressOrPlace}}</span>"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:10
-msgid "Want more stations here too?"
+msgid "Thank you for your suggestion!"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/location-summary.html:11
-msgid "Want more stations here?"
+msgid ""
+"The closest bikeshare station is <span class=\"station-"
+"name\">{{closestStationName}}</span> about <span class=\"station-"
+"distance\">{{closestStationReadableDistance}} away</span>. Actual walking "
+"distance may be farther."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/map-legend.html:1
+msgid "Existing Station"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/map-legend.html:2
+msgid "Map Legend"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/map-legend.html:3
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:11
+msgid "Station Suggestions"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/map-legend.html:4
+msgid ""
+"These are existing Bluebikes stations. Zoom in to see the name of the "
+"station."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/map-legend.html:5
+msgid ""
+"These are suggested locations for new Bluebikes stations. Darker circles "
+"indicate a higher number of suggestions."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:1
@@ -302,7 +292,8 @@ msgstr ""
 msgid ""
 "For durability and easy maintenance, we prefer level hardscape (concrete, "
 "brick, or asphalt) in public spaces with at least 4 hours of direct sunlight "
-"daily. If hardscape is unavailable, our team can install concrete pads."
+"daily. If hardscape is unavailable, our team may be able to install concrete "
+"pads."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:7
@@ -321,18 +312,21 @@ msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:10
 msgid ""
-"Sites on federal or private property require approval from the government or "
-"property owner and may need additional permissions"
-msgstr ""
-
-#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:11
-msgid "Station Suggestions"
+"Sites on federal, state, or private property require approval from the "
+"government or property owner and may need additional permissions"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:12
 msgid ""
 "Stations can also be placed on low-traffic, low-speed streets, ideally next "
 "to bike lanes."
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:13
+msgid ""
+"Suggestions do not guarantee a station; rather, suggestions are helpful "
+"feedback to augment existing processes that determine where and when new "
+"stations are added or expanded."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/place-form.html:1
