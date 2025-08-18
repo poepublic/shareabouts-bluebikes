@@ -64,7 +64,7 @@ msgstr "enviado"
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:15
 msgid "Suggestions"
-msgstr ""
+msgstr "Sugerencias"
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:16
 msgid "Suggestions do not guarantee a station."
@@ -336,7 +336,7 @@ msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:8
 msgid "Overview"
-msgstr ""
+msgstr "Descripción general"
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:9
 msgid ""
