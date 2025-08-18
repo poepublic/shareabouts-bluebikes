@@ -1,7 +1,7 @@
 <h1 class="">{{ place_config.title }}</h1>
 
-<p class="drag-marker-instructions {{#if ll}}is-visuallyhidden{{/if}}">{{#_}}Click the map to set your location.{{/_}}</p>
-<p class="drag-marker-warning is-visuallyhidden">{{#_}}It looks like you didn't set your location yet. Please click the map to set your location.{{/_}}</p>
+<p class="drag-marker-instructions {{#if ll}}is-visuallyhidden{{/if}}" {{#if ll}}aria-hidden="true"{{/if}}>{{#_}}Click the map to set your location.{{/_}}</p>
+<p class="drag-marker-warning is-visuallyhidden" aria-hidden="true">{{#_}}It looks like you didn't set your location yet. Please click the map to set your location.{{/_}}</p>
 
 <div class="location-summary-container">{{> location-summary }}</div>
 
