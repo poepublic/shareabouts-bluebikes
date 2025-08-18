@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-17 16:46-0500\n"
+"POT-Creation-Date: 2025-08-18 10:22-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgid "submitted"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:15
-msgid "Bikeshare Suggestions"
+msgid "Suggestions"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/_config.translations.py:16
@@ -254,7 +254,6 @@ msgid "Map Legend"
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/map-legend.html:3
-#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:11
 msgid "Station Suggestions"
 msgstr ""
 
@@ -296,16 +295,20 @@ msgid "Most of our stations are 42–52’ long and 6’ wide."
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:8
+msgid "Overview"
+msgstr ""
+
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:9
 msgid ""
 "Please identify any utility covers or maintenance holes, as stations cannot "
 "be installed over them."
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:9
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:10
 msgid "Site Notes:"
 msgstr ""
 
-#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:10
+#: src/flavors/bluebikes_suggestions/jstemplates/pages/overview.html:11
 msgid ""
 "Sites on federal, state, or private property require approval from the "
 "government or property owner and may need additional permissions"
