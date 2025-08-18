@@ -111,7 +111,7 @@ place:
   show_list_button_label: _(List All Suggestions)
   show_map_button_label: _(Show the Map)
   action_text: _(submitted)
-  title: _(Bikeshare Suggestions)
+  title: _(Suggestions)
   help_text: _(Suggestions do not guarantee a station.)
   anonymous_name: _(Someone)
   submit_button_label: _(Submit)
