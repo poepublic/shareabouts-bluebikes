@@ -5,11 +5,13 @@
 function moveToMapPosition (master, clones) {
   var center = master.getCenter();
   var zoom = master.getZoom();
+  var bearing = master.getBearing();
 
   clones.forEach(function (clone) {
     clone.jumpTo({
       center: center,
       zoom: zoom,
+      bearing: bearing,
     });
   });
 }
