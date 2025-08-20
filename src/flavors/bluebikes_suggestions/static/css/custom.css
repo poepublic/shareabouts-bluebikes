@@ -576,3 +576,18 @@ dialog {
 .c3 text {
   font-family: 'DM Sans', sans-serif;
 }
+
+/*= Colophon */
+
+#powered-by a.shareabouts-logo {
+  font-size: 1em;
+  font-family: cursive;
+}
+
+#powered-by a.poepublic-logo .poe {
+  font-weight: bold;
+}
+
+#powered-by a.poepublic-logo .public {
+  font-weight: normal;
+}
