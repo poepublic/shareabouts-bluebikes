@@ -22,7 +22,7 @@ var Shareabouts = Shareabouts || {};
     events: {
       'click #add-place': 'onClickAddPlaceBtn',
       'click #content .close-btn': 'onClickClosePanelBtn',
-      'click dialog .close-btn': 'onClickCloseDialogBtn'
+      'click dialog .close-btn': 'onClickCloseDialogBtn',
     },
     initialize: function(){
       var self = this,
