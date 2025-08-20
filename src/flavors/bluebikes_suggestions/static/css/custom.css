@@ -255,6 +255,10 @@ body {
   cursor: pointer;
 }
 
+#suggestions-overlay .mapboxgl-canvas {
+	mix-blend-mode: multiply;
+}
+
 #map-progress {
   top: 3.5rem;
   left: 0.5rem;
