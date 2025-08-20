@@ -280,10 +280,6 @@ body {
   height: 2.5rem;
 }
 
-#add-place-btn-container {
-  background-color: var(--content-background-color);
-}
-
 .geolocation-button-wrapper {
   position: absolute;
   top: 0.5rem;
