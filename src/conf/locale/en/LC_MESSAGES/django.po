@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 10:22-0500\n"
+"POT-Creation-Date: 2025-08-20 10:28-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -366,6 +366,10 @@ msgid ""
 "establish communication."
 msgstr ""
 
+#: src/flavors/bluebikes_suggestions/templates/base.html:84
+msgid "Loading Data&hellip;"
+msgstr ""
+
 #: src/flavors/bluebikes_suggestions/templates/base.html:92
 #: src/flavors/bluebikes_suggestions/templates/base.html:189
 #: src/flavors/bluebikes_suggestions/templates/base.html:194
@@ -386,6 +390,14 @@ msgid ""
 msgstr ""
 
 #: src/flavors/bluebikes_suggestions/templates/index.html:53
+msgid ""
+"Powered by <a href=\"https://github.com/openplans/shareabouts\" "
+"class=\"shareabouts-logo\" target=\"_blank\">Shareabouts</a>, <span "
+"class=\"nobreak\">built by <a href=\"\" class=\"poepublic-logo\" "
+"target=\"_blank\"><span class=\"poe\">Poe</span><span "
+"class=\"public\">Public</span></a></span>"
+msgstr ""
+
 #: src/flavors/defaultflavor/templates/index.html:52
 msgid "Powered by"
 msgstr ""
