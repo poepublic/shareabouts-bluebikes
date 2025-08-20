@@ -88,6 +88,7 @@ var Shareabouts = Shareabouts || {};
       this.baseMap.on('zoomend', logUserZoom);
 
       this.baseMap.on('moveend', function(evt) {
+        this.hasMapMoved = true;
         $(S).trigger('mapmoveend', [evt]);
         $(S).trigger('mapdragend', [evt]);
       });
@@ -97,6 +98,7 @@ var Shareabouts = Shareabouts || {};
       this.collection.on('add', this.syncDataLayers, this);
       this.collection.on('remove', this.syncDataLayers, this);
       Bluebikes.events.addEventListener('stationsLoaded', this.syncDataLayers.bind(this));
+      Bluebikes.events.addEventListener('serviceAreaLoaded', this.showServiceArea.bind(this));
 
       // Map interaction events
       this.baseMap.on('click', this.handleLocationSelect.bind(this));
@@ -228,6 +230,12 @@ var Shareabouts = Shareabouts || {};
       const endTime = new Date();
       console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
     }, 500),
+    showServiceArea: function() {
+      if (this.hasMapMoved) return;
+
+      const bounds = turf.bbox(Bluebikes.serviceArea);
+      this.map.fitBounds(bounds);
+    },
     updateExistingStations: function() {
       const existingStationsSource = this.stationsMap.getSource('existing-stations');
       if (!existingStationsSource) {
