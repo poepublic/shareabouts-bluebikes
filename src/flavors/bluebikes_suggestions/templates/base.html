@@ -185,12 +185,12 @@
   {% comment %} <script src="{{API_ROOT}}users/current?format=jsonp&callback=bootstrapCurrentUser"></script> {% endcomment %}
 
   <dialog id="thankyou-dialog" class="thankyou-dialog" closedby="any">
-    <a href="#" role="button" class="close-btn">&#10005;<span>{% blocktrans %}Close{% endblocktrans %}</span></a>
+    <a href="#" role="button" aria-label="{% translate "Close" %}" title="{% translate "Close" %}" class="close-btn">&#10005;</a>
     <p>{% translate "Thank you for submitting a station suggestion! Your feedback has been shared with the municipal owners of the Bluebikes system and will be taken into consideration for future station planning."%}</p>
   </dialog>
 
   <dialog id="servicearea-dialog" class="servicearea-dialog" closedby="any">
-    <a href="#" role="button" class="close-btn">&#10005;<span>{% blocktrans %}Close{% endblocktrans %}</span></a>
+    <a href="#" role="button" aria-label="{% translate "Close" %}" title="{% translate "Close" %}" class="close-btn">&#10005;</a>
     <p>{% translate "The location you've chosen is outside of the current Bluebikes service area. "%}</p>
   </dialog>
 
