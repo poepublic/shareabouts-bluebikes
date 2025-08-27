@@ -123,7 +123,7 @@ var Shareabouts = Shareabouts || {};
         // Get the click coordinate and zoom level, and navigate to /zoom/lat/lng/suggestions.
         const ll = evt.lngLat;
         const zoom = this.baseMap.getZoom() < 14 ? 14 : this.baseMap.getZoom();
-        console.log('clicked on the map at:', ll);
+        // console.log('clicked on the map at:', ll);
 
         this.selectLocation(ll, zoom);
       }, 300);
@@ -228,7 +228,7 @@ var Shareabouts = Shareabouts || {};
       this.updateStationSuggestions();
 
       const endTime = new Date();
-      console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
+      // console.log(`Updated layers with ${this.collection.models.length} suggestions; took ${endTime - startTime}ms to create layer; finished at ${endTime.toLocaleTimeString()}`);
     }, 500),
     showServiceArea: function() {
       if (this.hasMapMoved) return;
@@ -491,7 +491,7 @@ var Shareabouts = Shareabouts || {};
         );
       }
 
-      console.log('Proximity data generated:', proximityData);
+      // console.log('Proximity data generated:', proximityData);
       return proximityData;
     },
     makeProximityLayer: function() {
@@ -725,7 +725,7 @@ var Shareabouts = Shareabouts || {};
 
     filter: function(locationType) {
       var self = this;
-      console.log('filter the map', arguments);
+      // console.log('filter the map', arguments);
       this.locationTypeFilter = locationType;
       this.collection.each(function(model) {
         var modelLocationType = model.get('location_type');
