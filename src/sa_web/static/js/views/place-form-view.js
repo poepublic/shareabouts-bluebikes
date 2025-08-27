@@ -54,19 +54,27 @@ var Shareabouts = Shareabouts || {};
         this.setLatLng(ll);
       });
     },
-    getTemplateData: function() {
-      return _.extend({
+    getTemplateContext: function() {
+      // Augment the model data with place types for the drop down
+      const context = _.extend({
         place_config: this.options.placeConfig,
         user_token: this.options.userToken,
         language_code: S.bootstrapped.languageCode,
         current_user: S.currentUser
       }, S.Util.getStickyFields()[this.options.userToken] || {}, this.model.toJSON());
+
+      return context;
     },
     render: function(){
       // Augment the model data with place types for the drop down
       var data = this.getTemplateData();
 
-      this.$el.html(Handlebars.templates['place-form'](data));
+      return context;
+    },
+    render: function(){
+      var context = this.getTemplateContext();
+
+      this.$el.html(Handlebars.templates['place-form'](context));
       this.updatedRequiredOptionButtons();
 
       // Init counter text
