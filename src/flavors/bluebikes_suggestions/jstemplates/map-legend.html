@@ -1,4 +1,5 @@
 <div class="map-legend-container">
+  {{!-- <p>{{debug .}}</p> --}}
   <h2>{{#_}}Map Legend{{/_}}</h2>
 
   <ul class="map-legend">
@@ -13,7 +14,11 @@
       <span class="symbol"></span>
       <p>
         <span class="symbol-label">{{#_}}Station Suggestions{{/_}}</span>
+        {{#if oldestSuggestionDatetime}}
+        <span class="symbol-description">{{#_}}These are suggested locations for new Bluebikes stations since <time datetime="{{oldestSuggestionDatetime}}">{{oldestSuggestionReadableDatetime}}</time>. Darker circles indicate a higher number of suggestions.{{/_}}</span>
+        {{else}}
         <span class="symbol-description">{{#_}}These are suggested locations for new Bluebikes stations. Darker circles indicate a higher number of suggestions.{{/_}}</span>
+        {{/if}}
       </p>
     </li>
   </ul>

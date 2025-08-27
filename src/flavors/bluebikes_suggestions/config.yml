@@ -115,6 +115,7 @@ place:
   help_text: _(Suggestions do not guarantee a station.)
   anonymous_name: _(Someone)
   submit_button_label: _(Submit)
+  earliest_submission_date: "2016-03-25T21:26:43+00:00"
 
   location_item_name: location
   location_type: suggestion

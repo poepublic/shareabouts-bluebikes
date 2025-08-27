@@ -115,6 +115,9 @@ var Shareabouts = Shareabouts || {};
     const closestStationDistance = closestStation ? stationDistanceCache[closestStation.id] : null;
     const closestStationReadableDistance = closestStation ? S.Util.humanizeDistance(closestStationDistance) : null;
 
+    const oldestSuggestionDatetime = suggestions.length > 0 ? (new Date(suggestions.map(s => s.get('created_datetime')).sort()[0])).toISOString() : null;
+    const oldestSuggestionReadableDatetime = oldestSuggestionDatetime ? S.Util.getPrettyDateTime(oldestSuggestionDatetime) : null;
+
     return {
       ll, lat, lng,
       addressOrPlace,
@@ -126,6 +129,8 @@ var Shareabouts = Shareabouts || {};
       closestStationName,
       closestStationDistance,
       closestStationReadableDistance,
+      oldestSuggestionDatetime,
+      oldestSuggestionReadableDatetime,
     };
   }
 
