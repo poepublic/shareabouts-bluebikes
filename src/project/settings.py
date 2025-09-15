@@ -146,9 +146,13 @@ MIDDLEWARE = (
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_NAME = 'sa-web-session'
 SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+
 LANGUAGE_COOKIE_SAMESITE = 'None'
+LANGUAGE_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'project.urls'
 
