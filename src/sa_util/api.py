@@ -159,8 +159,8 @@ class ShareaboutsApi:
 
     def respond_with_session_cookie(self, response: HttpResponse):
         if self.sessioninfo:
-            response.set_cookie('sa-api-sessionid', self.sessioninfo['id'])
-            response.set_cookie('sa-api-sessiondomain', self.sessioninfo['domain'])
+            response.set_cookie('sa-api-sessionid', self.sessioninfo['id'], samesite='None', secure=True)
+            response.set_cookie('sa-api-sessiondomain', self.sessioninfo['domain'], samesite='None', secure=True)
             print(f'Updating session cookie: {self.sessioninfo}')
         else:
             response.delete_cookie('sa-api-sessionid')
