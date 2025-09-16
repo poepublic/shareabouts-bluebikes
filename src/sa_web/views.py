@@ -280,6 +280,11 @@ def proxy_view(request, url, requests_args={}):
     if url.startswith('http:') or url.startswith('https:'):
         response = remote_proxy_view(request, url, requests_args=requests_args)
 
+        # Cookies will already have been parsed into the response.cookies
+        # attribute, so we can remove the Set-Cookie header to avoid
+        # duplication.
+        response.headers.pop('Set-Cookie', None)
+
         # Do not pass on csrf cookies from proxied requests.
         if 'csrftoken' in response.cookies:
             del response.cookies['csrftoken']
