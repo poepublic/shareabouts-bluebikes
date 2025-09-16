@@ -279,9 +279,16 @@ def proxy_view(request, url, requests_args={}):
     # For full URLs, use a real proxy.
     if url.startswith('http:') or url.startswith('https:'):
         response = remote_proxy_view(request, url, requests_args=requests_args)
+
+        # Do not pass on csrf cookies from proxied requests.
+        if 'csrftoken' in response.cookies:
+            del response.cookies['csrftoken']
+
+        # Ensure that cookies set from proxied requests are samesite=None
         for cookie in response.cookies.values():
             cookie['samesite'] = 'None'
             cookie['secure'] = True
+
         return response
 
     # For local paths, use a simpler proxy. If there are headers specified
