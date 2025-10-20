@@ -6,6 +6,9 @@ from urllib.parse import urlparse
 from django.conf import settings
 from .config import get_shareabouts_config, _ShareaboutsConfig
 
+import logging
+log = logging.getLogger(__name__)
+
 
 def make_api_root(dataset_root):
     components = dataset_root.split('/')
@@ -105,10 +108,16 @@ class ShareaboutsApi:
     def current_user(self, default=None, **kwargs):
         if not hasattr(self, '_cached_user'):
             uri = make_resource_uri('current', root=self.auth_root)
-            res = self.session.get(uri, **kwargs)
-            self.update_session_cookie()
 
-            self._cache_user(res.json() if res.status_code == 200 else default)
+            try:
+                res = self.session.get(uri, timeout=kwargs.get('timeout', 5), **kwargs)
+                self.update_session_cookie()
+
+                self._cache_user(res.json() if res.status_code == 200 else default)
+            except requests.exceptions.ConnectTimeout:
+                self._cache_user(default)
+                log.warning(f"Connection timed out while fetching current user from API at {uri}")
+
         return self._cached_user
 
     def login(self, username, password, **kwargs):
