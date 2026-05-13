@@ -19,7 +19,7 @@
   --highlight-text-color: var(--bb-black);
 
   --map-background-color: var(--bb-light-gray);
-  
+
   --button-background-color: var(--bb-black);
   --button-text-color: var(--bb-white);
   --subtle-button-background-color: var(--bb-light-gray);
@@ -165,7 +165,7 @@ body {
   #site-header {
     height: var(--header-height);
   }
-  
+
   #site-title {
     display: block;
     font-family: "DM Sans", sans-serif;
@@ -193,7 +193,7 @@ body {
     float: none;
     margin: 0;
     height: 100%;
-  } 
+  }
 
   .access li:hover > ul, .access li:hover > form > ul {
     height: auto;
@@ -409,7 +409,7 @@ a.close-btn span {
 .map-legend .existing-station .symbol,
 .map-legend .suggested-station .symbol {
   display: inline-block;
-  flex-shrink: 0; 
+  flex-shrink: 0;
   height: 2em;
   width: 3em;
   background-repeat: no-repeat;
@@ -569,7 +569,7 @@ dialog {
   margin-bottom: 2rem;
 }
 
-.c3 text {
+.bb text {
   font-family: 'DM Sans', sans-serif;
 }
 

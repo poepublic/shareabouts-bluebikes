@@ -140,7 +140,7 @@ var Shareabouts = Shareabouts || {};
       ...PlaceFormView__getTemplateData.call(this, arguments),
       location_type: 'suggestion',
     };
-    
+
     if (!this.ll) return placeFormData;
 
     const summaryData = makeSummaryData(this.ll, this.location, this.options.appView.collection);
@@ -205,7 +205,7 @@ var Shareabouts = Shareabouts || {};
       if (form && youSuggested) {
         form.classList.add('hidden');
       }
-      
+
       // If the user has not suggested a location, show the form.
       else if (form && !youSuggested) {
         form.classList.remove('hidden');
@@ -227,7 +227,7 @@ var Shareabouts = Shareabouts || {};
           }
         }
       }
-      
+
       // If the station is not within the threshold distance, hide the fields,
       // remembering which ones were required.
       else {
@@ -256,7 +256,7 @@ var Shareabouts = Shareabouts || {};
       if (this.ll) {
         const data = makeSummaryData(
           this.ll,
-          this.addressOrPlace, 
+          this.addressOrPlace,
           this.collection,
         );
 
@@ -271,7 +271,8 @@ var Shareabouts = Shareabouts || {};
         // Draw a chart of the suggestion reasons if available.
         if (data.suggestionReasons && data.suggestionReasons.length > 0) {
           if (!this.chart) {
-            this.chart = c3.generate({
+            this.chart = bb.generate({
+              bindto: document.createElement('div'),
               data: {
                 columns: [], //data.suggestionReasons.map(reason => [reason.label, reason.percentage]),
                 colors: {}, // data.suggestionReasons.reduce((acc, reason) => ({...acc, [reason.label]: reason.color}), {}),
@@ -291,7 +292,8 @@ var Shareabouts = Shareabouts || {};
             });
           }
 
-          this.$('.suggestion-reasons-chart').html(this.chart.element);
+          const chartEl = this.chart.$.chart.node();
+          this.$('.suggestion-reasons-chart').append(chartEl);
 
           const shortFormLabelCache = new Map();
           function shortFormLabel(label) {
